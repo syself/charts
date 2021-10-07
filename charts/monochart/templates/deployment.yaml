@@ -1,0 +1,119 @@
+{{- $root := . -}}
+{{- range $name, $deployment := .Values.deployments }}
+{{- if $deployment.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $deployment.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $deployment.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  {{- if empty ( dig "autoscaling" "enabled" "" $deployment ) }}
+  replicas: {{ $deployment.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ include "common.name" $root }}
+      {{- include "common.labels.selector" $root | nindent 6 }}
+      {{- with $deployment.labels }}
+      {{- toYaml $deployment.labels | nindent 6 }}
+      {{- end }}
+{{- with $deployment.strategy }}
+  strategy:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  revisionHistoryLimit: {{ $deployment.revisionHistoryLimit }}
+  template:
+    metadata:
+      name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $root | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") $root | sha256sum }}
+{{- if $deployment.pod}}
+{{- with $deployment.pod.annotations }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- end }}
+      labels:
+        app: {{ include "common.name" $root }}
+        {{- include "common.labels.selector" $root | nindent 8 }}
+        {{- with $deployment.labels }}
+        {{- toYaml $deployment.labels | nindent 8 }}
+        {{- end }}
+{{- if $deployment.pod}}
+{{- with $deployment.pod.labels }}
+{{ toYaml .| indent 8 }}
+{{- end }}
+{{- end }}
+    spec:
+{{- if index $.Values "serviceAccountName" }}
+      serviceAccountName: {{ $.Values.serviceAccountName }}
+      automountServiceAccountToken: false
+{{- else if $.Values.serviceAccount.create }}
+      serviceAccountName: {{ include "monochart.serviceAccountName" $root }}
+      automountServiceAccountToken: false
+{{- else }}
+      automountServiceAccountToken: true
+{{- end }}
+      
+{{- if $deployment.affinity }}
+      affinity:
+{{- if or $deployment.affinity.podAntiAffinity (eq $deployment.affinity.affinityRule "ShouldBeOnDifferentNode") }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+{{- if $deployment.affinity.podAntiAffinity }}
+{{- if $deployment.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with $deployment.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if eq $deployment.affinity.affinityRule "ShouldBeOnDifferentNode" }}
+{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" $root | nindent 10 }}
+{{- end }}
+{{- end }}
+{{- if $deployment.affinity.podAffinity }}
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+{{- with $deployment.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }} 
+{{- if or (hasKey $root.Values.common "initContainers") (hasKey $deployment "initContainers") }}
+{{ include "monochart.containers.init" (list $root $deployment ) | indent 6 }}
+{{- end }} 
+{{- if or (hasKey $root.Values.common "containers") (hasKey $deployment "containers") }}
+{{ include "monochart.containers.pod" (list $root $deployment ) | indent 6 }}
+{{- end }}  
+{{- if not (empty ( dig "pod" "hostAliases" "" $deployment)) }}
+{{- with $deployment.pod.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
+{{- end -}}
+{{- end -}}
+{{ include "monochart.imagePullSecret" (list $root $deployment ) | indent 6 }}
+{{- if or $.Values.persistence.enabled | or $.Values.configMaps | or $.Values.secrets }}
+      volumes:
+{{- if $.Values.persistence.enabled }}
+      - name: storage
+      {{- if $.Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ $.Values.persistence.existingClaim | default (include "common.fullname" $root ) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
+{{- end -}}
+      {{- include "monochart.files.volumes" $root | nindent 6 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

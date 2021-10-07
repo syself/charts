@@ -1,0 +1,68 @@
+{{- $root := . -}}
+{{- range $name, $job := .Values.jobs -}}
+{{- if $job.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $job.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $job.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  activeDeadlineSeconds: {{ default 1200 $job.activeDeadlineSeconds }}
+  template:
+    metadata:
+      name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+{{- if not (empty (dig "pod" "annotations" "" $job)) }}
+{{- with $job.pod.annotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- end }}
+      labels:
+        app: {{ include "common.name" $root }}
+        release: {{ $root.Release.Name | quote }}
+{{- if not (empty (dig "pod" "labels" "" $job)) }}
+{{- with $job.pod.labels }}
+{{ toYaml .| indent 8 }}
+{{- end }}
+{{- end }}
+    spec:
+{{- if index $root.Values "serviceAccountName" }}
+      serviceAccountName: {{ $root.Values.serviceAccountName }}
+{{- else if $root.Values.serviceAccount.create }}
+      serviceAccountName: {{ include "monochart.serviceAccountName" $root }}
+{{- end }}
+      restartPolicy: '{{ default "Never" $job.restartPolicy }}'
+{{- if or (hasKey $root.Values.common "initContainers") (hasKey $job "initContainers") }}
+{{ include "monochart.containers.init" (list $root $job ) | indent 6 }}
+{{- end }} 
+{{- if or (hasKey $root.Values.common "containers") (hasKey $job "containers") }}
+{{ include "monochart.containers.job" (list $root $job ) | indent 6 }}
+{{- end }}  
+{{- if not (empty (dig "pod" "hostAliases" "" $job)) }}
+{{- with $job.pod.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- end }}
+{{ include "monochart.imagePullSecret" (list $root $job ) | indent 6 }}
+      volumes:
+      - name: storage
+      {{- if $root.Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ $root.Values.persistence.existingClaim | default (include "common.fullname" $root) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+{{- include "monochart.files.volumes" $root | indent 6 }}
+{{- end -}}
+{{- end -}}

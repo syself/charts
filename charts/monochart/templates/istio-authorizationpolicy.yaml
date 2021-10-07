@@ -1,0 +1,36 @@
+{{- $root := . -}}
+{{- $serviceName := include "common.fullname" . -}}
+{{- range $name, $authorizationpolicy := .Values.authorizationpolicies -}}
+{{- if $authorizationpolicy.enabled }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $authorizationpolicy.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{- with $authorizationpolicy.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+{{- with $authorizationpolicy.matchLabels }}
+{{ toYaml . | indent 6 }}
+{{- end }}
+  action: {{ $authorizationpolicy.action }}
+  provider:
+    # The provider name must match the extension provider defined in the mesh config.
+    name: {{ $authorizationpolicy.provider }} 
+  rules:
+{{- with $authorizationpolicy.rules }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+
+{{- end }}
+{{- end -}}

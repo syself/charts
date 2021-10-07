@@ -1,0 +1,813 @@
+nameOverride: test
+fullnameOverride: test
+
+common:
+  labels:
+    standard:
+      label-name: value-label
+    selector:
+      selector-label-name: value-selector
+  env:
+    INLINE_ENV_NAME: ENV_VALUE
+  envFrom:
+   secrets:
+     - secret-1
+     - secret-2
+   configMaps:
+     - config-1
+     - config-2
+  envFromFieldRefFieldPath:
+    ENV_1: path-1
+    ENV_2: path-2
+  envFromSecretKeyRef:
+    - name: MY_ENV_VARIABLE
+      secret: kubernetes-secret-name
+      key: key-name-in-secret
+  pod:
+    pullSecrets:
+      - test-secret
+  containers:
+  - repository: nginx
+    tag: 1.15.3
+    pullPolicy: IfNotPresent
+    command: "test"
+    args:
+      - "--test"
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 3000
+      fsGroup: 2000
+    pullSecrets:
+      - "docker-secret-1"
+      - "docker-secret-2"
+    probes:
+      livenessProbe:
+        exec:
+          command: ["/grpc_health_probe", "-addr=:7444"]
+        initialDelaySeconds: 10
+      readinessProbe:
+        exec:
+          command: ["/grpc_health_probe", "-addr=:7444"]
+        initialDelaySeconds: 5
+    resources:
+      requests:
+        memory: "32Mi"
+        cpu: "50m"
+    autoscaling:
+      enabled: true
+      minReplicas: 5
+      maxReplicas: 20
+    pdb:
+      enabled: true
+      minAvailable: 2
+      maxUnavailable: 10
+  initContainers:
+  - name: init-container
+    repository: nginx
+    tag: 1.15.3
+    command: "test"
+    args:
+      - "--test"
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 3000
+      fsGroup: 2000
+    pullSecrets:
+      - "docker-secret-1"
+      - "docker-secret-2"
+    probes:
+      livenessProbe:
+        exec:
+          command: ["/grpc_health_probe", "-addr=:7444"]
+        initialDelaySeconds: 10
+      readinessProbe:
+        exec:
+          command: ["/grpc_health_probe", "-addr=:7444"]
+        initialDelaySeconds: 5
+    resources:
+      requests:
+        memory: "32Mi"
+        cpu: "50m"
+
+regcred:
+  enabled: true
+  image:
+    pullSecret:
+      registry: https://index.docker.io/v1/
+      username: example
+      password: password
+
+serviceAccount:
+  create: true
+
+envoyFilter:
+  grpcWeb:
+    enabled: true
+
+service:
+  enabled: true
+  type: ClusterIP
+  ports:
+    grpc-web:
+      internal: 7444
+      external: 8080
+    http-metrics:
+      internal: 9090
+
+jobs:
+  default: 
+    enabled: true
+  second: 
+    enabled: true
+    activeDeadlineSeconds: 400
+    labels: 
+      example-label-job: value
+    annotations:
+      helm.sh/hook-weight: "1"
+      helm.sh/hook: "pre-install, pre-upgrade"
+    pod:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        pod-label: value
+
+cronjobs:
+  default:
+    enabled: true
+    successfulJobsHistoryLimit: 1
+    failedJobsHistoryLimit: 1
+    concurrencyPolicy: Forbid
+    schedule: "* * * * *"
+    activeDeadlineSeconds: 300
+    restartPolicy: Never
+    containers:
+    - repository: nginx
+      tag: 1.15.3
+      pullPolicy: Always
+    pod:
+      annotations:
+        sidecar.istio.io/inject: "false"
+
+configMaps:
+  default:
+    enabled: true
+    mountPath: /config-default
+    annotations:
+      test.annotation: value
+    labels:
+      test_label: value
+    env:
+      CONFIG_ENV_NAME: ENV_VALUE
+    files:
+      config.test.txt: |-
+        some text
+
+secrets:
+  default:
+    enabled: true
+    mountPath: /secret-default
+    annotations:
+      test.secret.annotation: value
+    labels:
+      test_label: value
+    env:
+      SECRET_ENV_NAME: ENV_VALUE
+    files:
+      secret.test.txt: |-
+        some text
+
+
+
+deployments:
+  default:
+    enabled: true
+    ## Pods replace strategy
+    ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+    strategy: 
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 25%
+    revisionHistoryLimit: 10
+    pod:
+      annotations:
+        pod-annotations: value
+      labels:
+        pod-labels: value
+      hostAliases:
+        - ip: 127.0.0.1
+          hostnames:
+          - "foo.local"
+    annotations:
+      nginx.version: 1.15.3
+    labels:
+      component: nginx
+    affinity:
+      # use of simple rule
+      affinityRule: "ShouldBeOnDifferentNode"
+      # use custom affinity rule. Here app MUST be on different host then postgres instance for it
+      podAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - postgresql
+            - key: release
+              operator: In
+              values:
+              - "test-postgresql"
+          topologyKey: "kubernetes.io/hostname"
+  second:
+    enabled: true
+    ## Pods replace strategy
+    ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+    strategy: 
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 25%
+    revisionHistoryLimit: 10
+    annotations:
+      nginx.version: 1.15.3
+    labels:
+      component: nginx
+    replicas: 10
+    probes:
+      livenessProbe:
+        exec:
+          command: ["/grpc_health_probe", "-addr=:7446"]
+        initialDelaySeconds: 30
+      readinessProbe:
+        exec:
+          command: ["/grpc_health_probe", "-addr=:7446"]
+        initialDelaySeconds: 30
+    resources:
+      requests:
+        memory: "118Mi"
+        cpu: "500m"
+
+certManager:
+  certificates:
+    default:
+      enabled: true
+      annotations:
+        "cert-manager.io/issue-temporary-certificate": "true"
+      subject: 
+        organizationalUnits:
+          - "test"
+      dnsNames:
+        - test-service
+  issuers:
+    default:
+      enabled: true
+      acme:
+        server: https://acme-staging-v02.api.letsencrypt.org/directory
+        email: test@example.com
+        privateKeySecretRef:
+          name: credential-name-issuer-account-key
+        solvers:
+        - http01:
+            istio:
+              gateways:
+              - default/testing
+
+
+gateways:
+  default:
+    enabled: true
+    nameOverride: testing
+    istioController: Gateway-name
+    servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+      - test-service
+      tls:
+        httpsRedirect: true # https redirect is enabled
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+      - test-service
+      tls:
+        credentialName: credential-name
+        mode: SIMPLE
+        privateKey: sds
+        serverCertificate: sds
+
+authorizationpolicys:
+  default:
+    enabled: true
+    annotations: {}
+    labels: {}
+    matchLabels:
+      label-match: "true"
+    action: CUSTOM
+    provider: PROVIDER-NAME
+    rules:
+    - to:
+      - operation:
+          hosts:
+            - test-service
+
+# Istio Virtual Services for load balancer
+virtualServices:
+  default:
+    annotations:
+      test: annotation
+    labels:
+      test: label
+    enabled: true
+    hosts:
+      - "domain.com"
+      - "www.domain.com"
+    gateways:
+      - "public-ingress"
+      - "private-ingress"
+    http:
+    - name: "reviews-v2-routes"
+      match:
+        - uri:
+            prefix: "/wpcatalog"
+        - uri:
+            prefix: "/consumercatalog"
+      rewrite:
+        uri: "/newcatalog"
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v2
+
+    - name: "reviews-v1-route"
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v1
+      corsPolicy:
+        allowOrigin:
+          - example.com
+        allowMethods:
+          - POST
+          - GET
+        allowCredentials: false
+        allowHeaders:
+          - X-Foo-Bar
+        maxAge: "24h"
+
+    - name: "cors"
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+            subset: v1
+      corsPolicy:
+        allowOrigin:
+          - example.com
+        allowMethods:
+          - POST
+          - GET
+        allowCredentials: false
+        allowHeaders:
+          - X-Foo-Bar
+        maxAge: "24h"
+
+    - name: "fault-injection-abort"
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+            subset: v1
+      fault:
+        abort:
+          percentage:
+            value: 0.1
+          httpStatus: 400
+
+    - name: "fault-injection-delay"
+      match:
+        - sourceLabels:
+            env: prod
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v1
+      fault:
+        delay:
+          percentage:
+            value: 0.1
+          fixedDelay: 5s
+
+    - name: "http-match-request"
+      match:
+        - headers:
+            end-user:
+              exact: jason
+          uri:
+            prefix: "/ratings/v2/"
+          ignoreUriCase: true
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+
+    - name: "http-redirect"
+      match:
+        - uri:
+            exact: /v1/getProductRatings
+      redirect:
+        uri: /v1/bookRatings
+        authority: newratings.default.svc.cluster.local
+
+    - name: "http-retry"
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+            subset: v1
+      retries:
+        attempts: 3
+        perTryTimeout: 2s
+        retryOn: gateway-error,connect-failure,refused-stream
+
+    - name: "http-rewrite"
+      match:
+        - uri:
+            prefix: /ratings
+      rewrite:
+        uri: /v1/bookRatings
+      route:
+        - destination:
+            host: ratings.prod.svc.cluster.local
+            subset: v1
+
+    - name: "http-route-destination"
+      route:
+      - destination:
+          host: reviews.prod.svc.cluster.local
+          subset: v2
+        weight: 25
+      - destination:
+          host: reviews.prod.svc.cluster.local
+          subset: v1
+        weight: 75
+
+    - name: "headers"
+      headers:
+        request:
+          set:
+            test: true
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v2
+          weight: 25
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            subset: v1
+          headers:
+            response:
+              remove:
+                - foo
+          weight: 75
+
+    - name: "monochart-port"
+      route:
+        - destination:
+            host: reviews.prod.svc.cluster.local
+            port: default
+
+    - name: "monochart-omit-host"
+      route:
+        - destination:
+
+    - name: "monochart-omit-destination"
+      route:
+        - {}
+
+    - name: "monochart-self-usecase"
+      route:
+        - destination:
+            port: default
+
+    tcp:
+    - match:
+      - port: 27017
+      route:
+      - destination:
+          host: mongo.backup.svc.cluster.local
+          port:
+            number: 5555
+
+
+destinationRules:
+  default:
+    enabled: true
+    trafficPolicy:
+        connectionPool:
+          tcp:
+            maxConnections: 100
+          http:
+            http2MaxRequests: 1000
+            maxRequestsPerConnection: 10
+        outlierDetection:
+          consecutive5xxErrors: 7
+          interval: 5m
+          baseEjectionTime: 15m
+    subsets:
+    - name: version1
+      labels:
+        version: version1
+      trafficPolicy:
+        connectionPool:
+          tcp:
+            maxConnections: 100
+          http:
+            http2MaxRequests: 1000
+            maxRequestsPerConnection: 10
+        outlierDetection:
+          consecutive5xxErrors: 7
+          interval: 5m
+          baseEjectionTime: 15m
+
+
+oathkeeperRules:
+  default:
+    enabled: true
+    match:
+      url: "<https|http>://example.com/api.proto.admin.v1alpha1.AdminService/<.*>"
+      methods:
+      - POST
+
+    authenticators:
+    - handler: cookie_session
+      config:
+        check_session_url: http://kratos-public:80/sessions/whoami
+        preserve_path: true
+        extra_from: "@this"
+        subject_from: "identity.id"
+        only:
+        - ory_kratos_session
+    authorizer:
+      handler: allow
+    mutators:
+    - handler: header
+  auth:
+    enabled: true
+    match:
+      url: "<https|http>://example.com/api.proto.admin.v1alpha1.AdminService/<.*>"
+      methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - PATCH
+    authenticators:
+      - handler: cookie_session
+        config:
+          check_session_url: http://kratos-public:80/sessions/whoami
+          preserve_path: true
+          extra_from: "@this"
+          subject_from: "identity.id"
+          only:
+            - ory_kratos_session
+    authorizer:
+      handler: allow
+    mutators:
+      - handler: header
+
+crd:
+  "networking.istio.io/v1alpha3":
+    ServiceEntry:
+      default:
+        enabled: true
+        labels:
+          test: label
+        annotations:
+          test: annotations
+        spec:
+          hosts:
+          - www.googleapis.com
+          ports:
+          - number: 443
+            name: https
+            protocol: HTTPS
+          location: MESH_EXTERNAL
+          resolution: DNS
+
+
+serviceMonitors:
+ ## Name of the ServiceMonitor to create
+ ##
+  default:
+    ## Labels to set used for the ServiceMonitorSelector.
+    labels:
+      prometheus: kube-prometheus
+    ## Service label for use in assembling a job name of the form <label value>-<port>
+    ## If no label is specified, the service name is used.
+    jobLabel: ""
+    ## Label selector for services to which this ServiceMonitor applies
+    ##
+    selector:
+      matchLabels:
+        app: nginx-ingress
+
+    ## Namespaces from which services are selected
+    ##
+    namespaceSelector:
+      ## Match any namespace
+      ##
+      any: false
+
+      ## Explicit list of namespace names to select
+      ##
+      matchNames: ["default"]
+
+
+    ## Endpoints of the selected service to be monitored
+    ##
+    endpoints:
+      ## Name of the endpoint's service port
+      ## Mutually exclusive with targetPort
+      - port: "80"
+
+      ## Name or number of the endpoint's target port
+      ## Mutually exclusive with port
+      - targetPort: "8080"
+
+      ## File containing bearer token to be used when scraping targets
+      ##
+        bearerTokenFile: ""
+
+      ## Interval at which metrics should be scraped
+      ##
+        interval: 30s
+
+      ## HTTP path to scrape for metrics
+      ##
+        path: /metrics
+
+      ## HTTP scheme to use for scraping
+      ##
+        scheme: http
+
+      ## TLS configuration to use when scraping the endpoint
+      ##
+        tlsConfig:
+
+          # Path to the CA file
+          #
+          caFile: ""
+
+          # Path to client certificate file
+          #
+          certFile: ""
+
+          # Skip certificate verification
+          #
+          insecureSkipVerify: false
+
+          # Path to client key file
+          #
+          keyFile: ""
+
+          # Server name used to verify host name
+          #
+          serverName: ""
+
+prometheusRules: 
+  default:
+    labels:
+      prometheus: kube-prometheus
+    groups:
+    - name: prometheus.rules
+      rules:
+      - alert: PrometheusConfigReloadFailed
+        expr: prometheus_config_last_reload_successful == 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          description: Reloading Prometheus' configuration has failed for {{$labels.namespace}}/{{$labels.pod}}
+          summary: Reloading Promehteus' configuration failed
+
+persistence:
+  enabled: true
+  storageName: storage
+  mountPath: /data
+  accessMode: ReadWriteOnce
+  size: 8Gi
+  annotations:
+    name: value
+  labels:
+    name: value
+
+  # A manually managed Persistent Volume and Claim
+  # Requires Persistence.Enabled: true
+  # If defined, PVC must be created manually before volume will be bound
+  existingClaim:
+
+  # Data Persistent Volume Storage Class
+  # If defined, storageClassName: <storageClass>
+  # If set to "-", storageClassName: "", which disables dynamic provisioning
+  # If undefined (the default) or set to null, no storageClassName spec is
+  # set, choosing the default provisioner.  (gp2 on AWS, standard on
+  # GKE, AWS & OpenStack)
+  #
+  storageClass: "-"
+
+
+ingresses:
+  default:
+    enabled: true
+    port: port-name
+    labels:
+      dns: "route53"
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+    hosts:
+      "domain.com": /
+      "www.domain.com": /
+    tls:
+    - secretName: server-tls
+      hosts:
+      - domain.com
+
+clusterRoles:
+  default:
+    enabled: true
+    annotations: 
+      key: val 
+    labels: 
+      labels-key: val 
+    aggregationRule:
+      clusterRoleSelectors:
+        - test
+    rules:
+      - resources: 
+          - pods
+          - deployments
+        verbs:
+          - get
+        apiGroups:
+          - deplyoments
+      - verbs:
+          - get
+        apiGroups:
+          - deplyoments
+
+Roles:
+  default:
+    enabled: true
+    annotations: 
+      key: val 
+    labels: 
+      labels-key: val 
+    aggregationRule:
+      clusterRoleSelectors:
+        - test
+    rules:
+      - resources: 
+          - pods
+          - deployments
+        verbs:
+          - get
+        apiGroups:
+          - deplyoments
+      - verbs:
+          - get
+        apiGroups:
+          - deplyoments
+
+clusterRoleBindings:
+  default:
+    enabled: true
+    annotations: 
+      key: val 
+    labels: 
+      labels-key: val 
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: secret-reader
+    subjects:
+      - kind: Group
+        name: manager
+        apiGroup: rbac.authorization.k8s.io
+        namespace: kube-system
+
+roleBindings:
+  default:
+    enabled: true
+    annotations: 
+      key: val 
+    labels: 
+      labels-key: val 
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: secret-reader
+    subjects:
+      - kind: Group
+        name: manager
+        apiGroup: rbac.authorization.k8s.io
+        namespace: kube-system

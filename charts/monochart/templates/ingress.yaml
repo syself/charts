@@ -1,0 +1,37 @@
+{{- $root := . -}}
+{{- $serviceName := include "common.fullname" . -}}
+{{- range $name, $ingress := .Values.ingresses -}}
+{{- if $ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+{{- with $ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{- with $ingress.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+    ingressName: {{ $name }}
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  rules:
+{{- range $host, $path := $ingress.hosts }}
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: {{ $path }}
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
+{{- end -}}
+{{- with $ingress.tls }}
+  tls:
+{{ toYaml . | indent 4 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

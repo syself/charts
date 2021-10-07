@@ -1,0 +1,36 @@
+{{- $root := . -}}
+{{- $serviceName := include "common.fullname" . -}}
+{{- range $name, $destinationRule := .Values.destinationRules -}}
+{{- if $destinationRule.enabled }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $destinationRule.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{- with $destinationRule.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  host: {{ include "common.fullname" $root }}
+{{- if not ( empty $destinationRule.trafficPolicy ) }}
+  trafficPolicy:
+{{- include "monochart.istio.destinationRule.trafficPolicy" ( list $root $destinationRule.trafficPolicy ) | indent 4 }}
+{{- end }}
+{{- if not ( empty $destinationRule.subsets ) }}
+  subsets:
+{{- include "monochart.istio.destinationRule.subsets" ( list $root $destinationRule.subsets ) | indent 2 }}
+{{- end }}
+{{- if not ( empty $destinationRule.exportTo ) }}
+  exportTo:
+{{ toYaml $destinationRule.exportTo | indent 4 }}
+{{- end }}
+
+{{- end }}
+{{- end -}}

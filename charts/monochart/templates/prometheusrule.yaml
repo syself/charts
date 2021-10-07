@@ -1,0 +1,18 @@
+{{- $root := . -}}
+{{- range $name, $rules := .Values.prometheusRules }}
+---
+## https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusrulespec
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- if not ( empty $rules.labels) }}
+{{ toYaml $rules.labels | indent 4 }}
+{{- end }}
+spec:
+  groups:
+{{ toYaml $rules.groups | indent 4 }}
+{{- end }}

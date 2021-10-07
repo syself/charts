@@ -1,0 +1,126 @@
+{{- $root := . -}}
+{{- if .Values.istioOperator }}
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: {{ include "common.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.istioOperator.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.istioOperator.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  profile: empty
+  hub: gcr.io/istio-release
+  components:
+    {{- if .Values.istioOperator.pilot }}
+    {{ with .Values.istioOperator.pilot }}
+    pilot:
+      {{ toYaml . | nindent 6 }}
+    {{- end }}
+    {{- end }}
+    # Istio Gateway feature
+    {{- if .Values.istioOperator.ingressGateways }}
+    ingressGateways:
+    {{- range $ingressGateway := .Values.istioOperator.ingressGateways }}
+    - name: istio-{{ $ingressGateway.name }}
+      enabled: {{ $ingressGateway.enabled }}
+      {{- if $ingressGateway.label }}
+      label:
+        {{- toYaml $ingressGateway.label | nindent 8 }}
+      {{- end }}
+      k8s:
+        {{- if $ingressGateway.serviceAnnotations }}
+        serviceAnnotations:
+          {{- toYaml $ingressGateway.serviceAnnotations | nindent 10}}
+        {{- end }}
+        hpaSpec:
+          {{- if $ingressGateway.hpa.minReplicas }}
+          minReplicas: {{ $ingressGateway.hpa.minReplicas }}
+          {{- end }}
+          {{- if $ingressGateway.hpa.maxReplicas }}
+          maxReplicas: {{ $ingressGateway.hpa.maxReplicas }}
+          {{- end }}
+          {{- if $ingressGateway.hpa.metrics }}
+          metrics:
+          {{- toYaml $ingressGateway.hpa.metrics | nindent 10 }}
+          {{- end }}
+          {{- if $ingressGateway.hpa.scaleTargetRef }}
+          scaleTargetRef:
+            {{- toYaml $ingressGateway.hpa.scaleTargetRef | nindent 12 }}
+          {{- end }}
+        {{- if $ingressGateway.nodeSelector }}
+        nodeSelector:
+          {{- toYaml $ingressGateway.nodeSelector | nindent 10 }}
+        {{- end }}
+        {{- if $ingressGateway.service }}
+        service:
+          {{- toYaml $ingressGateway.service | nindent 10 }}
+        {{- end }}
+        {{- if $ingressGateway.overlays }}
+        overlays:
+        {{- toYaml $ingressGateway.overlays | nindent 8 }}
+        {{- end }}
+        {{- if $ingressGateway.resources }}
+        resources:
+          {{- toYaml $ingressGateway.resources | nindent 10 }}
+        {{- end }}
+        {{- if $ingressGateway.strategy }}
+        strategy:
+          {{- toYaml $ingressGateway.strategy | nindent 10 }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .Values.istioOperator.egressGateways }}
+    egressGateways:
+    {{- range $egressGateway := .Values.istioOperator.egressGateways }}
+    - name: istio-{{ $egressGateway.name }}
+      enabled: {{ $egressGateway.enabled }}
+      label:
+        istio: {{ $egressGateway.name }}
+      k8s:
+        {{- if $egressGateway.serviceAnnotations }}
+        serviceAnnotations:
+          {{- toYaml $egressGateway.serviceAnnotations | nindent 10}}
+        {{- end }}
+        hpaSpec:
+          {{- if $egressGateway.hpa.minReplicas }}
+          minReplicas: {{ $egressGateway.hpa.minReplicas }}
+          {{- end }}
+          {{- if $egressGateway.hpa.maxReplicas }}
+          maxReplicas: {{ $egressGateway.hpa.maxReplicas }}
+          {{- end }}
+          {{- if $egressGateway.hpa.metrics }}
+          metrics:
+          {{ toYaml $egressGateway.hpa.metrics | nindent 10 }}
+          {{- end }}
+          {{- if $egressGateway.hpa.scaleTargetRef }}
+          scaleTargetRef:
+            {{- toYaml $egressGateway.hpa.scaleTargetRef | nindent 12 }}
+          {{- end }}
+        {{- if $egressGateway.nodeSelector }}
+        nodeSelector:
+          {{- toYaml $egressGateway.nodeSelector |nindent 10 }}
+        {{- end }}
+        service:
+          {{ toYaml $egressGateway.service | nindent 10 }}
+        {{- if $egressGateway.overlays }}
+        overlays:
+        {{ toYaml $egressGateway.overlays | nindent 8 }}
+        {{- end }}
+        {{- if $egressGateway.resources }}
+        resources:
+          {{ toYaml $egressGateway.resources | nindent 10 }}
+        {{- end }}
+        {{- if $egressGateway.strategy }}
+        strategy:
+          {{ toYaml $egressGateway.strategy | nindent 10 }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+{{- end }}

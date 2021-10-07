@@ -1,0 +1,64 @@
+{{- $root := . -}}
+{{- range $name, $binding := .Values.roleBindings -}}
+{{- if $binding.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $binding.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $binding.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+roleRef:
+  apiGroup: {{ $binding.roleRef.apiGroup | quote }}
+  kind: {{ $binding.roleRef.kind | quote }}
+  name: {{ $binding.roleRef.name | quote }}
+subjects:
+{{- range $key, $val := $binding.subjects }}
+- apiGroup: {{ $val.apiGroup | quote }}
+  kind: {{ $val.kind | quote }}
+  name: {{ $val.name | quote }}
+  namespace: {{ $val.namespace | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- $root := . -}}
+{{- range $name, $binding := .Values.clusterRoleBindings -}}
+{{- if $binding.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $binding.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $binding.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+roleRef:
+  apiGroup: {{ $binding.roleRef.apiGroup | quote }}
+  kind: {{ $binding.roleRef.kind | quote }}
+  name: {{ $binding.roleRef.name | quote }}
+subjects:
+{{- range $key, $val := $binding.subjects }}
+- apiGroup: {{ $val.apiGroup | quote }}
+  kind: {{ $val.kind | quote }}
+  name: {{ $val.name | quote }}
+  namespace: {{ $val.namespace | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+

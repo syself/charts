@@ -1,0 +1,41 @@
+{{- if .Values.service.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.service.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.service.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service.type }}
+{{- if eq .Values.service.type "ExternalName" }}
+  externalName: {{ .Values.service.externalName }}
+{{- else }}
+  ports:
+{{- range $name, $port := .Values.service.ports }}
+{{- if $port.external }}
+  - targetPort: {{ $name }}
+    port: {{ $port.external }}
+    protocol: {{ default "TCP" $port.protocol  }}
+    name: {{ $name }}
+{{- end }}
+{{- end }}
+{{- if .Values.service.selector }}
+{{- with .Values.service.selector }}
+  selector:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- else }}
+  selector:
+    app: {{ include "common.name" . }}
+{{ include "common.labels.selector" . | indent 4 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}

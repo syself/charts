@@ -1,0 +1,29 @@
+{{- $root := . -}}
+{{- $serviceName := include "common.fullname" . -}}
+{{- range $name, $gateway := .Values.gateways -}}
+{{- if $gateway.enabled }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ if $gateway.nameOverride }}{{ $gateway.nameOverride}}{{ else }}{{ include "common.fullname" $root }}-{{ $name }}{{ end }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $gateway.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{- with $gateway.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+  selector:
+    istio: {{ $gateway.istioController }} # use istio default controller
+  {{- if not ( empty $gateway.servers ) }}
+  servers:
+  {{ include "monochart.istio.gateway.servers" ( list $root $gateway.servers ) | indent 2 }}
+  {{- end }}
+
+{{- end }}
+{{- end -}}

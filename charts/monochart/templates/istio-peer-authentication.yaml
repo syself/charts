@@ -1,0 +1,33 @@
+{{- $root := . -}}
+{{- range $name, $peerAuthentication := .Values.peerAuthentications -}}
+{{- if $peerAuthentication.enabled }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: {{ if $peerAuthentication.nameOverride }}{{ $peerAuthentication.nameOverride}}{{ else }}{{ include "common.fullname" $root }}-{{ $name }}{{ end }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $peerAuthentication.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{- with $peerAuthentication.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+{{- with $peerAuthentication.selector }}
+  selector:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- if not (empty $peerAuthentication.mtls) }}
+  mtls:
+    mode: {{ $peerAuthentication.mtls }}
+{{- end }}
+{{- with $peerAuthentication.portLevelMtls }}
+  portLevelMtls:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end -}}

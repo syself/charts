@@ -1,0 +1,19 @@
+peerAuthentications:
+  default:
+    enabled: true
+    mtls: PERMISSIVE
+  first:
+    enabled: true
+    selector:
+      matchLabels:
+        app: finance
+    mtls: STRICT
+  second:
+    enabled: true
+    selector:
+      matchLabels:
+        app: finance
+    mtls: STRICT
+    portLevelMtls:
+      8080:
+        mode: DISABLE

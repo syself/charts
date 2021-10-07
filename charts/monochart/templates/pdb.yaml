@@ -1,0 +1,51 @@
+{{- $root := . -}}
+{{- if .Values.deployments }}
+{{- range $name, $key := .Values.deployments }}
+{{- include "pdb" ( list $root $name $key ) }}
+{{- end }}
+{{- end }}
+{{- if .Values.statefulsets }}
+{{- range $name, $key := .Values.statefulsets }}
+{{- include "pdb" ( list $root $name $key) }}
+{{- end }}
+{{- end }}
+
+{{- define "pdb" -}}
+{{- $root := index . 0 }}
+{{- $name := index . 1 }}
+{{- $key := index . 2 }}
+{{- $pdb := $key.pdb }}
+{{- if $pdb.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+  namespace: {{ $root.Release.Namespace }}
+{{- with $pdb.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $pdb.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+{{- with $key.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "common.name" $root }}
+      {{- with $key.labels }}
+      {{- toYaml $key.labels | nindent 6 }}
+      {{- end }}
+{{- if $pdb.minAvailable }}
+  minAvailable: {{ $pdb.minAvailable }}
+{{- end }}
+{{- if $pdb.maxUnavailable }}
+  maxUnavailable: {{ $pdb.maxUnavailable }}
+{{- end }}
+{{- end }}
+{{- end }}

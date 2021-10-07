@@ -1,0 +1,63 @@
+{{- $root := . -}}
+{{- range $name, $cron := .Values.cronjobs -}}
+{{- if $cron.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $cron.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $cron.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  successfulJobsHistoryLimit: {{ default 1 $cron.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 1 $cron.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ default "Forbid" $cron.concurrencyPolicy }}
+  schedule: '{{ required "Schedule required!" $cron.schedule }}'
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: {{ default 300 $cron.activeDeadlineSeconds }}
+      template:
+        metadata:
+          name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+{{- if not (empty (dig "pod" "annotations" "" $cron)) }}
+{{- with $cron.pod.annotations }}
+          annotations:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- end }}
+          labels:
+            app: {{ include "common.name" $root }}
+            release: {{ $root.Release.Name | quote }}
+{{- if not (empty (dig "pod" "labels" "" $cron)) }}
+{{- with $cron.pod.labels }}
+{{ toYaml .| indent 12 }}
+{{- end }}
+{{- end }}
+        spec:
+{{- if index $root.Values "serviceAccountName" }}
+          serviceAccountName: {{ $root.Values.serviceAccountName }}
+{{- end }}
+          restartPolicy: '{{ default "Never" $cron.restartPolicy }}'
+{{- if or (hasKey $root.Values.common "initContainers") (hasKey $cron "initContainers") }}
+{{ include "monochart.containers.init" (list $root $cron ) | indent 10 }}
+{{- end }} 
+{{- if or (hasKey $root.Values.common "containers") (hasKey $cron "containers") }}
+{{ include "monochart.containers.job" (list $root $cron ) | indent 10 }}
+{{- end }} 
+{{- if not (empty (dig "pod" "hostAliases" "" $cron)) }}
+{{- with $cron.pod.hostAliases }}
+          hostAliases:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- end }}
+{{ include "monochart.imagePullSecret" (list $root $cron ) | indent 10 }}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,32 @@
+{{- $root := . -}}
+{{- $serviceName := include "common.fullname" . -}}
+{{- range $name, $certificate := .Values.certManager.certificates -}}
+{{- if $certificate.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}-{{ $.Release.Namespace }}
+  namespace: istio-system
+{{- with $certificate.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{- with $certificate.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+{{- if not ( empty $certificate.subject ) }}
+  subject:
+{{ toYaml $certificate.subject | indent 4 }}
+{{- end }}
+  secretName: {{ include "common.fullname" $root }}-{{ $name }}-{{ $.Release.Namespace }}
+  dnsNames:
+{{ toYaml $certificate.dnsNames | indent 4 }}
+  issuerRef:
+    kind: Issuer
+    name: {{ include "common.fullname" $root }}-{{ $name }}-{{ $.Release.Namespace }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,41 @@
+{{- $root := . -}}
+{{- range $name, $monitor := .Values.serviceMonitors }}
+---
+## ServiceMonitor CRDs to create & be scraped by the Prometheus instance.
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/service-monitor.md
+## Ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitorspec
+##
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- if not ( empty $monitor.labels) }}
+{{ toYaml $monitor.labels | indent 4 }}
+{{- end }}
+spec:
+  endpoints:
+{{ toYaml $monitor.endpoints | indent 4 }}
+
+{{- if $monitor.jobLabel }}
+  jobLabel: {{ $monitor.jobLabel }}
+{{- end }}
+
+  namespaceSelector:
+{{- if $monitor.namespaceSelector }}
+{{ toYaml $monitor.namespaceSelector | indent 4 }}
+{{- else }}
+    matchNames:
+    - {{ $root.Release.Namespace}}
+{{- end }}
+
+  selector:
+{{- if $monitor.selector }}
+{{ toYaml $monitor.selector | indent 4 }}
+{{- else }}
+    matchLabels:
+{{ include "common.labels.standard" $root | indent 6 }}
+{{- end }}
+{{- end -}}

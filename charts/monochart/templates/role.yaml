@@ -1,0 +1,69 @@
+{{- $root := . -}}
+{{- range $name, $role := .Values.roles -}}
+{{- if $role.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $role.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $role.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+rules:
+{{- range $key, $val := $role.rules }}
+- apiGroups: ["{{ join "\",\"" $val.apiGroups }}"]
+  resources: ["{{ join "\",\"" $val.resources  }}"]
+  verbs: ["{{ join "\",\"" $val.verbs }}"]
+  {{- if $val.resourceNames }}
+  resourceNames: ["{{ join "\",\"" $val.resourceNames }}"]
+  {{- end }}
+  {{- if $val.nonResourceURLs }}
+  nonResourceURLs: ["{{ join "\",\"" $val.nonResourceURLs }}"]
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- $root := . -}}
+{{- range $name, $role := .Values.clusterRoles -}}
+{{- if $role.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name | replace "_" "-"  }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $role.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" $root | indent 4 }}
+{{- with $role.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with $role.aggregationRule }}
+aggregationRule:
+{{ toYaml . | indent 2}}
+{{- end }}
+rules:
+{{- range $key, $val := $role.rules }}
+- apiGroups: ["{{ join "\",\"" $val.apiGroups }}"]
+  resources: ["{{ join "\",\"" $val.resources  }}"]
+  verbs: ["{{ join "\",\"" $val.verbs }}"]
+  {{- if $val.resourceNames }}
+  resourceNames: ["{{ join "\",\"" $val.resourceNames }}"]
+  {{- end }}
+  {{- if $val.nonResourceURLs }}
+  nonResourceURLs: ["{{ join "\",\"" $val.nonResourceURLs }}"]
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

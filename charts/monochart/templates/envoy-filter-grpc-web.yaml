@@ -1,0 +1,32 @@
+{{- if .Values.envoyFilter }}
+{{- if .Values.envoyFilter.grpcWeb.enabled -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: {{ include "common.fullname" . }}-grpc-web-filter
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.envoyFilter.grpcWeb.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.envoyFilter.grpcWeb.labels }}
+{{ toYaml .| indent 4 }}
+{{- end }}
+spec:
+  workloadSelector:
+    labels:
+      app: {{ include "common.name" . }}
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: SIDECAR_INBOUND
+    patch:
+      operation: INSERT_FIRST
+      value:
+        name: envoy.filters.http.grpc_web
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_web.v3.GrpcWeb
+{{- end }}
+{{- end }}

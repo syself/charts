@@ -1,0 +1,167 @@
+{{- if .Values.statefulsets -}}
+{{- if .Values.statefulsets.enabled -}}
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: {{ include "common.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+{{- with .Values.statefulset.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{ include "common.labels.standard" . | indent 4 }}
+{{- with .Values.statefulset.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "common.name" . }}
+      release: {{ .Release.Name }}
+  serviceName: {{ include "common.fullname" . }}
+  replicas: {{ .Values.replicas }}
+{{- with .Values.statefulset.strategy }}
+  updateStrategy:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  revisionHistoryLimit: {{ .Values.statefulset.revisionHistoryLimit }}
+  template:
+    metadata:
+      name: {{ include "common.fullname" . }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+{{- with .Values.statefulset.pod.annotations }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+      labels:
+        app: {{ include "common.name" . }}
+        release: {{ .Release.Name | quote }}
+{{- with .Values.statefulset.pod.labels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+{{- if index .Values "serviceAccountName" }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
+{{- end }}
+      terminationGracePeriodSeconds: {{ .Values.statefulset.terminationGracePeriodSeconds }}
+{{- if .Values.statefulset.affinity }}
+      affinity:
+{{- if or .Values.statefulset.affinity.podAntiAffinity (eq .Values.statefulset.affinity.affinityRule "ShouldBeOnDifferentNode") }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+{{- if .Values.statefulset.affinity.podAntiAffinity }}
+{{- if .Values.statefulset.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{- with .Values.statefulset.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if eq .Values.statefulset.affinity.affinityRule "ShouldBeOnDifferentNode" }}
+{{- include "monochart.affinityRule.ShouldBeOnDifferentNode" . | nindent 10 }}
+{{- end }}
+{{- end }}
+{{- if .Values.statefulset.affinity.podAffinity }}
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+{{- with .Values.statefulset.affinity.podAffinity.requiredDuringSchedulingIgnoredDuringExecution }}
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ required "image.repository is required!" .Values.common.image.repository }}:{{ required "image.tag is required!" .Values.image.tag }}
+        imagePullPolicy: {{ .Values.common.image.pullPolicy }}
+{{ include "monochart.env" (list . .Values.statefulset ) | indent 8 }}
+{{- with .Values.statefulset.pod.command }}
+        command:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.statefulset.pod.args }}
+        args:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.statefulset.pod.securityContext }}
+        securityContext:
+{{ toYaml . | indent 10 }}
+{{- end }}
+        ports:
+{{- range $name, $port := .Values.service.ports }}
+{{- if $port }}
+        - name: {{ $name }}
+          containerPort: {{ $port.internal }}
+          protocol: {{ default "TCP" $port.protocol  }}
+{{- end }}
+{{- end }}
+        volumeMounts:
+        {{- if .Values.statefulset.persistence.enabled }}
+        - mountPath: {{ .Values.statefulset.persistence.mountPath | quote }}
+          name: {{ include "common.fullname" . }}
+        {{- end }}
+        {{- include "monochart.files.volumeMounts" . | nindent 8 }}
+{{- if index .Values.statefulset.probes }}
+{{- with .Values.statefulset.probes }}
+{{ toYaml . | indent 8 }}
+{{- end -}}
+{{- else }}
+{{- with $.Values.common.probes }}
+{{ toYaml . | indent 8 }}
+{{- end -}}
+{{- end -}}
+{{- with .Values.common.resources }}
+        resources:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.statefulset.pod.hostAliases }}
+      hostAliases:
+{{ toYaml . | indent 8 }}
+{{- end }}
+      imagePullSecrets:
+{{- if .Values.regcred.enabled }}
+        - name: regcred-{{ include "common.fullname" . }}
+{{- end }}
+{{- with .Values.common.pod.pullSecrets }}
+      {{- range . }}
+        - name: {{ . }}
+      {{- end }}
+{{- end }}
+      volumes:
+{{ include "monochart.files.volumes" . | indent 6 }}
+{{- if .Values.statefulset.persistence.enabled }}
+{{- if not .Values.statefulset.persistence.useVolumeClaimTemplates }}
+      - name: {{ (include "common.fullname" . ) }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.statefulset.persistence.existingClaim | default (include "common.fullname" . ) }}
+{{- end }}
+{{- if .Values.statefulset.persistence.useVolumeClaimTemplates }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ include "common.fullname" . }}
+{{- with .Values.statefulset.persistence.annotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+      labels:
+{{ include "common.labels.standard" . | indent 8 }}
+{{- with .Values.statefulset.persistence.labels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+      accessModes:
+        - {{ .Values.statefulset.persistence.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.statefulset.persistence.size | quote }}
+{{- if .Values.statefulset.persistence.storageClass }}
+{{- if (eq "-" .Values.statefulset.persistence.storageClass) }}
+      storageClassName: ""
+{{- else }}
+      storageClassName: {{ .Values.statefulset.persistence.storageClass | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}
+{{- end -}}

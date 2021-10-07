@@ -1,0 +1,52 @@
+common: 
+  labels:
+    standard: {}
+  pod:
+    pullSecrets: {}
+
+regcred: {}
+
+serviceAccount: {}
+
+envoyFilter: {}
+
+configMaps: {}
+
+secrets: {}
+
+deployments: {}
+
+statefulsets: {}
+
+daemonsets: {}
+
+jobs: {}
+
+cronjobs: {}
+
+service:
+  enabled: false
+  type: ClusterIP
+
+serviceMonitors: {}
+
+prometheusRules: {}
+
+persistence:
+  enabled: false
+
+ingresses: {}
+
+virtualServices: {}
+
+crd: {}
+
+gateways: {}
+
+authorizationpolicies: {}
+
+oathkeeperRules: {}
+
+certManager: {}
+
+istioOperator: {}

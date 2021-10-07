@@ -1,0 +1,43 @@
+{{- $root := . -}}
+{{- $serviceName := include "common.fullname" . -}}
+{{- range $name, $oathkeeperrule := .Values.oathkeeperRules -}}
+{{- if $oathkeeperrule.enabled }}
+---
+apiVersion: oathkeeper.ory.sh/v1alpha1
+kind: Rule
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  namespace: {{ $.Release.Namespace }}
+{{- with $oathkeeperrule.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+{{- with $oathkeeperrule.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{ include "common.labels.standard" $root | indent 4 }}
+spec:
+
+{{- if not ( empty $oathkeeperrule.match ) }}
+  match:
+{{ toYaml $oathkeeperrule.match | indent 4 }}
+{{- end }}
+
+{{- if not ( empty $oathkeeperrule.authenticators ) }}
+  authenticators:
+{{ toYaml $oathkeeperrule.authenticators | indent 4 }}
+{{- end }}
+
+{{- if not ( empty $oathkeeperrule.authorizer ) }}
+  authorizer:
+{{ toYaml $oathkeeperrule.authorizer | indent 4 }}
+{{- end }}
+
+{{- if not ( empty $oathkeeperrule.mutators ) }}
+  mutators:
+{{ toYaml $oathkeeperrule.mutators | indent 4 }}
+{{- end }}
+
+{{ end }}
+{{ end }}
