@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  cluster-api:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2021-10-21T17:58:15.436990585Z"
+    description: Cluster-API Helm Chart generated from kustomize.
+    digest: c2c2d6835ee2b30ae66eaca57dcd342e89d8739f722a5ac699d3b6e19bdf17c1
+    name: cluster-api
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/cluster-api-1.0.0/cluster-api-1.0.0.tgz
+    version: 1.0.0
   monochart:
   - apiVersion: v2
     created: "2021-10-07T20:23:33.101740843Z"
@@ -9,4 +20,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2021-10-07T20:23:33.102981259Z"
+generated: "2021-10-21T17:58:15.538418868Z"
