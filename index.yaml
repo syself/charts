@@ -1,6 +1,62 @@
 apiVersion: v1
 entries:
+  CABPK:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2021-12-01T23:13:58.718338672Z"
+    description: Cluster API Bootstrap Provider Kubeadm Helm Chart generated from
+      kustomize.
+    digest: 7952b20f30d2206f86df8c4162374d0258ee7c8880a33f1c5753a1cbc0059eeb
+    name: CABPK
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/CABPK-1.0.1/CABPK-1.0.1.tgz
+    version: 1.0.1
+  CACPK:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2021-12-01T23:13:58.812165954Z"
+    description: Cluster API Controlplane Provider Kubeadm Helm Chart generated from
+      kustomize.
+    digest: 0a7c70ad6c6419cd1dcf43adb690762713f5316f561dfa1df8ae9a17246690c6
+    name: CACPK
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/CACPK-1.0.1/CACPK-1.0.1.tgz
+    version: 1.0.1
+  CAPH:
+  - apiVersion: v2
+    appVersion: 1.0.0-alpha.1
+    created: "2021-12-01T23:13:58.912433591Z"
+    description: Cluster API Provider Hetzner Helm Chart generated from kustomize.
+    digest: 88d92e598671aadf70443d4beca8ba3fea55e14f702600ba15a371e41aefefa6
+    name: CAPH
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/CAPH-1.0.0-alpha.1/CAPH-1.0.0-alpha.1.tgz
+    version: 1.0.0-alpha.1
+  CAPI:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2021-12-01T23:13:59.010123706Z"
+    description: Cluster API Helm Chart generated from kustomize.
+    digest: 49d0b764319ea76fba30ac88800c06cb1b58d8c715d98f9f0d851b90598c7108
+    name: CAPI
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/CAPI-1.0.1/CAPI-1.0.1.tgz
+    version: 1.0.1
   ccm-hcloud:
+  - apiVersion: v2
+    appVersion: 1.12.1
+    created: "2021-12-01T23:13:59.101548568Z"
+    description: Helm Chart for Hcloud Cloud Controller Manager
+    digest: df5950a80bec35f1bd4dd7c840191134ff943df681237fc07ec11b9f80dd65e0
+    name: ccm-hcloud
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/ccm-hcloud-1.0.1/ccm-hcloud-1.0.1.tgz
+    version: 1.0.1
   - apiVersion: v2
     appVersion: 1.12.0
     created: "2021-10-28T11:39:14.386211502Z"
@@ -31,4 +87,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2021-10-28T11:39:14.386220402Z"
+generated: "2021-12-01T23:13:59.101559968Z"
