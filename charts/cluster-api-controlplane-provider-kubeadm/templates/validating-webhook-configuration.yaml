@@ -1,0 +1,52 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "cluster-api-controlplane-provider-kubeadm.fullname" . }}-validating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "cluster-api-controlplane-provider-kubeadm.fullname" . }}-capi-kubeadm-control-plane-system/capi-kubeadm-control-plane-serving-cert
+  labels:
+  {{- include "cluster-api-controlplane-provider-kubeadm.labels" . | nindent 4 }}
+webhooks:
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: '{{ include "cluster-api-controlplane-provider-kubeadm.fullname" . }}-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-controlplane-cluster-x-k8s-io-v1beta1-kubeadmcontrolplane
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: validation.kubeadmcontrolplane.controlplane.cluster.x-k8s.io
+  rules:
+  - apiGroups:
+    - controlplane.cluster.x-k8s.io
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - kubeadmcontrolplanes
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  - v1beta1
+  clientConfig:
+    service:
+      name: '{{ include "cluster-api-controlplane-provider-kubeadm.fullname" . }}-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-controlplane-cluster-x-k8s-io-v1beta1-kubeadmcontrolplanetemplate
+  failurePolicy: Fail
+  name: validation.kubeadmcontrolplanetemplate.controlplane.cluster.x-k8s.io
+  rules:
+  - apiGroups:
+    - controlplane.cluster.x-k8s.io
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - kubeadmcontrolplanetemplates
+  sideEffects: None
