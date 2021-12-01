@@ -17,8 +17,12 @@ help: ## Display this help.
 
 
 helm: kustomize helmify
-	# $(KUSTOMIZE) build github.com/syself/cluster-api-provider-hetzner/config/default?ref=v0.1.0 | $(HELMIFY) charts/cluster-api-provider-hetzner
-	$(KUSTOMIZE) build github.com/kubernetes-sigs/cluster-api/config/default?ref=v1.0.0 | $(HELMIFY) charts/cluster-api
+	# Cluster-api 
+	$(KUSTOMIZE) build github.com/kubernetes-sigs/cluster-api/config/default?ref=v1.0.1 | $(HELMIFY) charts/cluster-api
+	$(KUSTOMIZE) build github.com/kubernetes-sigs/cluster-api/controlplane/kubeadm/config/default?ref=v1.0.1 | $(HELMIFY) charts/cluster-api-controlplane-provider-kubeadm
+	$(KUSTOMIZE) build github.com/kubernetes-sigs/cluster-api/bootstrap/kubeadm/config/default?ref=v1.0.1 | $(HELMIFY) charts/cluster-api-bootstrap-provider-kubeadm
+	# Cluster-api Provider
+	$(KUSTOMIZE) build github.com/syself/cluster-api-provider-hetzner/config/default?ref=v1.0.0-alpha.1 | $(HELMIFY) charts/cluster-api-provider-hetzner
 
 KUSTOMIZE = $(shell pwd)/bin/kustomize
 kustomize: ## Download kustomize locally if necessary.
@@ -26,7 +30,7 @@ kustomize: ## Download kustomize locally if necessary.
 
 HELMIFY = $(shell pwd)/bin/helmify
 helmify: ## Download helmify locally if necessary.
-	$(call go-get-tool,$(HELMIFY),github.com/arttor/helmify/cmd/helmify@v0.3.3)
+	$(call go-get-tool,$(HELMIFY),github.com/arttor/helmify/cmd/helmify@v0.3.4)
 
 # go-get-tool will 'go get' any package $2 and install it to $1.
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))

@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "cluster-api-provider-hetzner.fullname" . }}-selfsigned-issuer
+  labels:
+  {{- include "cluster-api-provider-hetzner.labels" . | nindent 4 }}
+spec:
+  selfSigned: {}

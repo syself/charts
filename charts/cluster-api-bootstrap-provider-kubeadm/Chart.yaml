@@ -1,0 +1,6 @@
+apiVersion: v2
+name: CABPK
+description: Cluster API Bootstrap Provider Kubeadm Helm Chart generated from kustomize.
+type: application
+version: 1.0.1
+appVersion: "1.0.1"

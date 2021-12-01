@@ -1,0 +1,11 @@
+controllerManager:
+  manager:
+    image:
+      repository: gcr.io/k8s-staging-cluster-api/kubeadm-bootstrap-controller
+      tag: main
+  replicas: 1
+webhookService:
+  ports:
+  - port: 443
+    targetPort: webhook-server
+  type: ClusterIP
