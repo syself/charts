@@ -1,5 +1,59 @@
 apiVersion: v1
 entries:
+  cabpk:
+  - apiVersion: v2
+    appVersion: v1.0.1
+    created: "2021-12-02T23:38:21.35303654Z"
+    description: Cluster API Bootstrap Provider Kubeadm Helm Chart generated from
+      kustomize.
+    digest: 4cf189ab9cc78f79170e04d43b7422cfb1aa8e56ce77908a5202f011b2550885
+    keywords:
+    - capi
+    name: cabpk
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/cabpk-v1.0.1/cabpk-v1.0.1.tgz
+    version: v1.0.1
+  cacpk:
+  - apiVersion: v2
+    appVersion: v1.0.1
+    created: "2021-12-02T23:38:21.466512119Z"
+    description: Cluster API Controlplane Provider Kubeadm Helm Chart generated from
+      kustomize.
+    digest: 5516dfbaa0a74b809c9bd1452d9d26aad9062e5685f90249d3a630431a5748f1
+    keywords:
+    - capi
+    name: cacpk
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/cacpk-v1.0.1/cacpk-v1.0.1.tgz
+    version: v1.0.1
+  caph:
+  - apiVersion: v2
+    appVersion: v1.0.0-alpha.1
+    created: "2021-12-02T23:38:21.581022196Z"
+    description: Cluster API Provider Hetzner Helm Chart generated from kustomize.
+    digest: 1eeacb84dd2d25690b71267ddf0fb8b88a364a4dabb5303644e954e49da4db1d
+    keywords:
+    - capi
+    name: caph
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/caph-v1.0.0-alpha.1/caph-v1.0.0-alpha.1.tgz
+    version: v1.0.0-alpha.1
+  capi:
+  - apiVersion: v2
+    appVersion: v1.0.1
+    created: "2021-12-02T23:38:21.699555461Z"
+    description: Cluster API Helm Chart generated from kustomize.
+    digest: 99d3c3632a1f5e424219457922b38d89918de7ac62796dcf4cd3a7339f445b85
+    keywords:
+    - capi
+    name: capi
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/capi-v1.0.1/capi-v1.0.1.tgz
+    version: v1.0.1
   ccm-hcloud:
   - apiVersion: v2
     appVersion: 1.12.1
@@ -52,4 +106,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2021-12-02T23:22:20.574974353Z"
+generated: "2021-12-02T23:38:21.699568061Z"
