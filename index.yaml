@@ -91,6 +91,16 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/caph-1.0.0-alpha.1/caph-1.0.0-alpha.1.tgz
     version: 1.0.0-alpha.1
+  - apiVersion: v2
+    appVersion: v1.0.0-alpha.1
+    created: "2021-12-02T23:22:20.412529354Z"
+    description: Cluster API Provider Hetzner Helm Chart generated from kustomize.
+    digest: 78c60db06edec5e7f10f908c7dd42b8071feeabb8a525505d5832f92b46fe25e
+    name: caph
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/caph-v1.0.0-alpha.1/caph-v1.0.0-alpha.1.tgz
+    version: v1.0.0-alpha.1
   capi:
   - apiVersion: v2
     appVersion: 1.0.1
@@ -165,4 +175,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2021-12-02T23:13:31.100478014Z"
+generated: "2021-12-02T23:22:20.574974353Z"
