@@ -2,7 +2,6 @@ controllerManager:
   manager:
     image:
       repository: quay.io/syself/cluster-api-provider-hetzner
-      tag: latest
     resources:
       limits:
         cpu: 100m

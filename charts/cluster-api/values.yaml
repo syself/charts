@@ -1,8 +1,11 @@
 controllerManager:
   manager:
     image:
-      repository: gcr.io/k8s-staging-cluster-api/cluster-api-controller
-      tag: main
+      repository: k8s.gcr.io/cluster-api/cluster-api-controller
+    args:
+      machinePool: false
+      clusterResourceSet: false 
+      clusterTopology: false
   replicas: 1
 webhookService:
   ports:

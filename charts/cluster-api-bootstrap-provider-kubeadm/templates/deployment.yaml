@@ -32,7 +32,7 @@ spec:
       - args:
         - --leader-elect
         - --metrics-bind-addr=localhost:8080
-        - --feature-gates=MachinePool=${EXP_MACHINE_POOL:=false}
+        - --feature-gates=MachinePool={{ .Values.controllerManager.manager.args.machinePool }}
         command:
         - /manager
         image: {{ .Values.controllerManager.manager.image.repository }}:{{ .Values.controllerManager.manager.image.tag
