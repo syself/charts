@@ -5,6 +5,6 @@ This repository hosts Syself's charts. Chart documentation is automatically gene
 ## Add Helm repository
 
 ```bash
-helm repo add syself https://github.syself.com/charts
+helm repo add syself https://charts.syself.com
 helm repo update
 ```
