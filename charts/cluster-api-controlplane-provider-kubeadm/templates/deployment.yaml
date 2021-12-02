@@ -32,7 +32,7 @@ spec:
       - args:
         - --leader-elect
         - --metrics-bind-addr=localhost:8080
-        - --feature-gates=ClusterTopology=${CLUSTER_TOPOLOGY:=false}
+        - --feature-gates=ClusterTopology={{ .Values.controllerManager.manager.args.clusterTopology }}
         command:
         - /manager
         image: {{ .Values.controllerManager.manager.image.repository }}:{{ .Values.controllerManager.manager.image.tag

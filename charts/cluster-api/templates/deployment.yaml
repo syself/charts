@@ -32,7 +32,7 @@ spec:
       - args:
         - --leader-elect
         - --metrics-bind-addr=localhost:8080
-        - --feature-gates=MachinePool=${EXP_MACHINE_POOL:=false},ClusterResourceSet=${EXP_CLUSTER_RESOURCE_SET:=false},ClusterTopology=${CLUSTER_TOPOLOGY:=false}
+        - --feature-gates=MachinePool={{ .Values.controllerManager.manager.args.machinePool }},ClusterResourceSet={{ .Values.controllerManager.manager.args.clusterResourceSet }},ClusterTopology={{ .Values.controllerManager.manager.args.clusterTopology }}
         command:
         - /manager
         image: {{ .Values.controllerManager.manager.image.repository }}:{{ .Values.controllerManager.manager.image.tag
