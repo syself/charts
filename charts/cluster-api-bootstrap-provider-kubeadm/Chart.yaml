@@ -4,3 +4,5 @@ description: Cluster API Bootstrap Provider Kubeadm Helm Chart generated from ku
 type: application
 version: v1.0.1
 appVersion: "v1.0.1"
+keywords:
+  - capi
