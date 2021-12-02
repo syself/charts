@@ -67,6 +67,28 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/ccm-hcloud-1.0.0/ccm-hcloud-1.0.0.tgz
     version: 1.0.0
+  cert-manager:
+  - apiVersion: v1
+    appVersion: v1.4.0-alpha.0
+    created: "2021-12-02T21:50:43.468698226Z"
+    description: A Helm chart for cert-manager
+    digest: 35fd311aefb8d34a74f1b3fcd6664a24c276f64c88fee34c4d710689098455cd
+    home: https://github.com/jetstack/cert-manager
+    icon: https://raw.githubusercontent.com/jetstack/cert-manager/master/logo/logo.png
+    keywords:
+    - cert-manager
+    - kube-lego
+    - letsencrypt
+    - tls
+    maintainers:
+    - email: james@jetstack.io
+      name: munnerz
+    name: cert-manager
+    sources:
+    - https://github.com/jetstack/cert-manager
+    urls:
+    - https://github.com/syself/charts/releases/download/cert-manager-v0.1.0/cert-manager-v0.1.0.tgz
+    version: v0.1.0
   cluster-api:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -87,4 +109,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2021-12-01T23:13:59.101559968Z"
+generated: "2021-12-02T21:50:43.468829329Z"
