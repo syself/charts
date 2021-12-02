@@ -46,6 +46,52 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/CAPI-1.0.1/CAPI-1.0.1.tgz
     version: 1.0.1
+  cabpk:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2021-12-02T22:35:34.249491011Z"
+    description: Cluster API Bootstrap Provider Kubeadm Helm Chart generated from
+      kustomize.
+    digest: aa68d5e4b04bd7eb4534a9c7caba23eeff0c8988cfda1edbb5f313858edc7554
+    name: cabpk
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/cabpk-1.0.1/cabpk-1.0.1.tgz
+    version: 1.0.1
+  cacpk:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2021-12-02T22:35:34.44765532Z"
+    description: Cluster API Controlplane Provider Kubeadm Helm Chart generated from
+      kustomize.
+    digest: 4c1a5453cb64e0a577d81eb00779351436904165ac47510d1415bb640a5205d8
+    name: cacpk
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/cacpk-1.0.1/cacpk-1.0.1.tgz
+    version: 1.0.1
+  caph:
+  - apiVersion: v2
+    appVersion: 1.0.0-alpha.1
+    created: "2021-12-02T22:35:34.611210512Z"
+    description: Cluster API Provider Hetzner Helm Chart generated from kustomize.
+    digest: 01b03f075945ab48be041266a612c96f80c263bc04cabb595a645cf396ee70fb
+    name: caph
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/caph-1.0.0-alpha.1/caph-1.0.0-alpha.1.tgz
+    version: 1.0.0-alpha.1
+  capi:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2021-12-02T22:35:34.779583051Z"
+    description: Cluster API Helm Chart generated from kustomize.
+    digest: 6106df12f8ed0b05b236bfb34aa336696d9bb07b189f5c893f44f87bbd9f0b65
+    name: capi
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/capi-1.0.1/capi-1.0.1.tgz
+    version: 1.0.1
   ccm-hcloud:
   - apiVersion: v2
     appVersion: 1.12.1
@@ -109,4 +155,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2021-12-02T21:50:43.468829329Z"
+generated: "2021-12-02T22:35:34.779603051Z"
