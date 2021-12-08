@@ -2,7 +2,7 @@ apiVersion: v2
 name: caph
 description: Cluster API Provider Hetzner Helm Chart generated from kustomize.
 type: application
-version: v1.0.0-alpha.1
+version: 1.0.0-alpha.1
 appVersion: "v1.0.0-alpha.1"
 keywords:
   - capi

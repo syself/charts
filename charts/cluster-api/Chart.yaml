@@ -2,7 +2,7 @@ apiVersion: v2
 name: capi
 description: Cluster API Helm Chart generated from kustomize.
 type: application
-version: v1.0.1
+version: 1.0.1
 appVersion: "v1.0.1"
 keywords:
   - capi
