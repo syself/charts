@@ -1,0 +1,15 @@
+secret:
+  name: hcloud
+
+prometheus:
+  serviceMonitor:
+    enabled: false
+    namespace: "monitoring"
+    labels:
+      release: prometheus-operator
+
+storageClasses: {}
+# - name: hcloud-volumes
+#   defaultStorageClass: true
+#   reclaimPolicy: Retain
+  

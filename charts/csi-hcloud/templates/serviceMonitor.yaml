@@ -1,0 +1,43 @@
+{{- if .Values.prometheus.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: hcloud-csi-controller
+  namespace: {{ .Values.prometheus.serviceMonitor.namespace }}
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.prometheus.serviceMonitor.labels }}
+{{ toYaml .Values.prometheus.serviceMonitor.labels | indent 4}}
+{{- end }}
+spec:
+  endpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - {{.Release.Namespace}}
+  selector:
+    matchLabels:
+      app: hcloud-csi-controller
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: hcloud-csi-node
+  namespace: {{ .Values.prometheus.serviceMonitor.namespace }}
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.prometheus.serviceMonitor.labels }}
+{{ toYaml .Values.prometheus.serviceMonitor.labels | indent 4}}
+{{- end }}
+spec:
+  endpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - {{.Release.Namespace}}
+  selector:
+    matchLabels:
+      app: hcloud-csi
+{{- end }}
