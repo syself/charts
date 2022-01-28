@@ -1,0 +1,25 @@
+{{- $root := . -}}
+{{- range $name, $kct := .Values.kubeadm.workers }}
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+kind: KubeadmConfigTemplate
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}-{{ include "KubeadmConfigTemplateSpec" (list $kct ) | sha256sum | trunc -5 }}
+  annotations:
+    {{- with $kct.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    "helm.sh/resource-policy": keep
+  {{- include "common.labels.boilerplate" (list $root $kct ) | nindent 2 }}
+spec:
+  template:
+    spec:
+      {{- include "KubeadmConfigTemplateSpec" (list $kct ) | nindent 6 -}}
+{{- end -}}
+{{/* Template for specs and sha sum */}}
+{{- define "KubeadmConfigTemplateSpec" -}}
+{{- $kct := first . -}}
+{{- include "kubeadm.cloud-init.basic" (list $kct ) | nindent 0 }}
+joinConfiguration:
+  {{- include "kubeadm.cloud-init.nodeRegistration" (list $kct.joinConfiguration ) | nindent 2 }}
+{{- end -}}

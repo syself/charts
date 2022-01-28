@@ -1,0 +1,73 @@
+{{- $cluster := .Values.cluster }}
+{{- if empty (dig "infrastructureRef" "" $cluster) -}}
+{{- required "Please specify a infrastructureRef" nil -}}
+{{- end -}}
+{{- if eq "hetzner" (lower $cluster.infrastructureRef) -}}
+{{- $hetznerCluster := .Values.hetzner.cluster }}
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: HetznerCluster
+metadata:
+  name: {{ include "common.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- include "common.annotations.boilerplate" (list $hetznerCluster ) | nindent 2 }}
+  {{- include "common.labels.boilerplate" (list . $hetznerCluster ) | nindent 2 }}
+spec:
+  {{- if hasKey $hetznerCluster "network" }}
+  {{- if $hetznerCluster.network.enabled}}
+  hcloudNetwork:
+    enabled: true
+    cidrBlock: {{ $hetznerCluster.network.cidrBlock | default "10.0.0.0/8" | quote }}
+    subnetCidrBlock: {{ $hetznerCluster.network.subnetCidrBlock | default "10.0.0.0/24" | quote }}
+    networkZone: {{ $hetznerCluster.network.networkZone | default "eu-central" }}
+  {{- end }}
+  {{- else }}
+  hcloudNetwork:
+    enabled: false
+  {{- end }}
+  {{- if hasKey $hetznerCluster "controlPlaneRegions" }}
+  controlPlaneRegions:
+  {{- with $hetznerCluster.controlPlaneRegions }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- end }}
+  controlPlaneEndpoint:
+    {{- if not (empty (dig "controlPlaneEndpoint" "dns" "" $hetznerCluster)) }}
+    {{- if not (empty $hetznerCluster.controlPlaneEndpoint.dns) }}
+    host: {{ $hetznerCluster.controlPlaneEndpoint.dns | quote }}
+    {{- else }}
+    {{- required "DNS Key provided but empty - DNS Name needs to be specified" nil }}
+    {{- end }}
+    {{- else }}
+    host: ""
+    {{- end }}
+    {{- if not (empty (dig "controlPlaneEndpoint" "port" "" $hetznerCluster)) }}
+    port: {{ $hetznerCluster.controlPlaneEndpoint.port | default "443" }}
+    {{- else }}
+    port: 443
+    {{- end }}
+  controlPlaneLoadBalancer:
+    region: {{ $hetznerCluster.controlPlaneLoadBalancer.region | default "fsn1" }}
+    type: {{ $hetznerCluster.controlPlaneLoadBalancer.type | default "lb11" }}
+    algorithm: {{ $hetznerCluster.controlPlaneLoadBalancer.algorithm | default "round_robin" }}
+    port: {{ $hetznerCluster.controlPlaneLoadBalancer.port | default "6443" }}
+    {{- if hasKey $hetznerCluster.controlPlaneLoadBalancer "extraTargets" }}
+    {{- with $hetznerCluster.controlPlaneLoadBalancer.extraTargets }}
+    extraTargets:
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+  {{- if hasKey $hetznerCluster "placementGroups" }}
+  {{- with $hetznerCluster.placementGroups }}
+  hcloudPlacementGroups:
+  {{- toYaml . | nindent 2}}
+  {{- end }}
+  {{- end }}
+  {{- with $hetznerCluster.sshKeys }}
+  sshKeys:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  hetznerSecretRef:
+    name: {{ $hetznerCluster.hetznerSecretRef.name | default "hetzner" }}
+    key:
+      hcloudToken: {{ $hetznerCluster.hetznerSecretRef.key.hcloudToken | default "hcloud" }}
+{{- end }}

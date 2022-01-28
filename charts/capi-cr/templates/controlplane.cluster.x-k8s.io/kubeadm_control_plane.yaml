@@ -1,0 +1,121 @@
+{{- $cluster := .Values.cluster }}
+{{- $kcp := .Values.kubeadm.controlPlane }}
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: KubeadmControlPlane
+metadata:
+  name: {{ include "common.fullname" . }}-control-plane
+  namespace: {{ .Release.Namespace }}
+  {{- include "common.annotations.boilerplate" (list $kcp ) | nindent 2 }}
+  {{- include "common.labels.boilerplate" (list . $kcp ) | nindent 2 }}
+spec:
+  replicas: {{ $cluster.controlPlane.replicas | default "1" }}
+  {{- if hasKey $kcp "upgradeAfter" }}
+  upgradeAfter: {{ $kcp.upgradeAfter  }}
+  {{- end }}
+  version: {{ required "You need to specify a Kubernetes version like v1.x.x on cluster.controlPlane - please check that the related machineTemplate and node image support the corresponding Kubernetes version" $cluster.controlPlane.version }}
+  machineTemplate:
+    infrastructureRef:
+      {{- include "infrastructureRef.machineTemplate" (dict "root" . "cluster" $cluster "name" "control-plane") | nindent 6 }}
+    {{- if hasKey $kcp "nodeDrainTimeout" }}
+    nodeDrainTimeout: {{ $kcp.nodeDrainTimeout | default "10m" }}
+    {{- end }}
+  kubeadmConfigSpec:
+    clusterConfiguration:
+      {{- if hasKey $kcp "apiServer" }}
+      apiServer:
+        {{- if hasKey $kcp.apiServer "extraArgs" }}
+        {{- with $kcp.apiServer.extraArgs }}
+        extraArgs:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- if hasKey $kcp.apiServer "extraVolumes" }}
+        {{- with $kcp.apiServer.extraVolumes }}
+        extraVolumes:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- if hasKey $kcp.apiServer "certSANs" }}
+        {{- with $kcp.apiServer.certSANs }}
+        certSANs:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- if hasKey $kcp.apiServer "timeoutForControlPlane" }}
+        timeoutForControlPlane: {{ $kcp.timeoutForControlPlane }}
+        {{- end }}
+      {{- end }}
+      {{- if hasKey $kcp "controllerManager" }}
+      controllerManager:
+        {{- if hasKey $kcp.controllerManager "extraArgs"  }}
+        {{- with $kcp.controllerManager.extraArgs }}
+        extraArgs:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- if hasKey $kcp.controllerManager "extraVolumes" }}
+        {{- with $kcp.controllerManager.extraVolumes }}
+        extraVolumes:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if hasKey $kcp "dns" }}
+      dns:
+        {{- if hasKey $kcp.dns "imageRepository" }}
+        imageRepository: {{ $kcp.dns.imageRepository }}
+        {{- end }}
+        {{- if hasKey $kcp.dns "imageTag" }}
+        imageTag: {{ $kcp.dns.imageTag }}
+        {{- end }}
+      {{- end }}
+      {{- if hasKey $kcp "etcd" }}
+      etcd:
+        {{- if hasKey $kcp.etcd "external"}}
+        {{- with $kcp.etcd.external }}
+        external:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- if hasKey $kcp.etcd "local" }}
+        {{- with $kcp.etcd.local }}
+        local:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if hasKey $kcp "scheduler" }}
+      scheduler:
+        {{- if hasKey $kcp.scheduler "extraArgs" }}
+        {{- with $kcp.scheduler.extraArgs }}
+        extraArgs:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- if hasKey $kcp.scheduler "extraVolumes" }}
+        {{- with $kcp.scheduler.extraVolumes }}
+        extraVolumes:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if hasKey $kcp "diskSetup" }}
+      diskSetup:
+        {{- if hasKey $kcp.diskSetup "filesystems" }}
+        {{- with $kcp.diskSetup.filesystems }}
+        filesystems:
+          {{- toYaml . | nindent 1 }}
+        {{- end }}
+        {{- end }}
+        {{- if hasKey $kcp.diskSetup "partitions" }}
+        {{- with $kcp.diskSetup.partitions }}
+        partitions:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- include "kubeadm.cloud-init.basic" (list $kcp ) | nindent 4 }}
+    initConfiguration:
+      {{- include "kubeadm.cloud-init.nodeRegistration" (list $kcp.initConfiguration) | nindent 6 }}
+    joinConfiguration:
+      {{- include "kubeadm.cloud-init.nodeRegistration" (list $kcp.joinConfiguration ) | nindent 6 }}

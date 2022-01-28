@@ -1,0 +1,376 @@
+common: 
+  labels:
+    standard: 
+      common: label
+
+cluster:
+  name: test
+  annotations: 
+    cluster-annotion: annotation
+  labels:
+    cluster-test: label
+  paused: true
+  network:
+    podCIDRBlocks:
+      - 10.0.0.0/16
+    serviceCIDRBlocks:
+      - 10.1.0.0/24
+  serviceDomain: cluster.local
+  controlPlaneRef: kubeadm
+  infrastructureRef: hetzner
+  controlPlane:
+    replicas: 3
+    version: v1.22.4
+    type: hcloud
+    healthCheck:
+      enabled: true
+      labels: 
+        test: labels
+      annotations:
+        annotation: test 
+      maxUnhealthy: 50%
+      nodeStartupTimeout: 4m
+      unhealthyConditions:
+      - type: Ready
+        status: Unknown
+        timeout: 300s
+      - type: Ready
+        status: "False"
+        timeout: 300s
+  workers:
+    md-0:
+      enabled: true
+      replicas: 5
+      version: v1.22.4
+      type: hcloud
+      labels:
+        test: label 
+      annotations: 
+        annotation: test
+      failureDomain: fsn1
+      strategy:
+        rollingUpdate:
+          deletePolicy: oldest
+          maxSurge: 1
+          maxUnavailable: 0
+      nodeDrainTimeout: 20m
+      revisionHistoryLimit: 2
+      progressDeadlineSeconds: 600
+      healthCheck:
+        enabled: true
+        labels: 
+          test: labels
+        annotations:
+          annotation: test 
+        maxUnhealthy: 50%
+        nodeStartupTimeout: 4m
+        unhealthyConditions:
+        - type: Ready
+          status: Unknown
+          timeout: 300s
+        - type: Ready
+          status: "False"
+          timeout: 300s
+    md-1:
+      enabled: true
+      replicas: 5
+      version: v1.22.4
+      type: hcloud
+      labels:
+        test: label 
+      annotations: 
+        annotation: test
+      failureDomain: fsn1
+      strategy:
+        rollingUpdate:
+          deletePolicy: oldest
+          maxSurge: 1
+          maxUnavailable: 0
+      nodeDrainTimeout: 20m
+      revisionHistoryLimit: 2
+      progressDeadlineSeconds: 600
+      healthCheck:
+        enabled: true
+        maxUnhealthy: 10%
+        nodeStartupTimeout: 8m
+        unhealthyConditions:
+        - type: Ready
+          status: Unknown
+          timeout: 200s
+        - type: Ready
+          status: "False"
+          timeout: 300s
+    md-2:
+      enabled: true
+      replicas: 5
+      version: v1.22.4
+      type: hcloud
+      labels:
+        test: label 
+      annotations: 
+        annotation: test
+      failureDomain: fsn1
+      strategy:
+        rollingUpdate:
+          deletePolicy: oldest
+          maxSurge: 1
+          maxUnavailable: 0
+      nodeDrainTimeout: 20m
+      revisionHistoryLimit: 2
+      progressDeadlineSeconds: 600
+      healthCheck:
+        labels: 
+          test: labels
+        annotations:
+          annotation: test 
+        maxUnhealthy: 50%
+        nodeStartupTimeout: 4m
+        unhealthyConditions:
+        - type: Ready
+          status: Unknown
+          timeout: 300s
+        - type: Ready
+          status: "False"
+          timeout: 300s
+
+
+kubeadm:
+  controlPlane:
+    labels:
+      test: labels
+    annotations: 
+      annotation: test
+    nodeDrainTimeout: 8m
+    upgradeAfter: 2022-02-01-140215
+    apiServer:
+      extraArgs:
+        cloud-provider: external
+        authorization-mode: "Node,RBAC"
+        kubelet-preferred-address-types: ExternalIP,Hostname,InternalDNS,ExternalDNS
+        profiling: "false"
+        enable-bootstrap-token-auth: "true"
+        insecure-port: "0"
+        default-not-ready-toleration-seconds: "45"
+        default-unreachable-toleration-seconds: "45"
+      extraVolumes:
+      - name: encryption-provider
+        hostPath: /etc/kubernetes/encryption-provider.yaml
+        mountPath: /etc/kubernetes/encryption-provider.yaml
+      timeoutForControlPlane: 5m
+    controllerManager:
+      extraArgs:
+        cloud-provider: external
+        cluster-signing-cert-file: /etc/kubernetes/pki/ca.crt
+        cluster-signing-key-file: /etc/kubernetes/pki/ca.key
+      extraVolumes:
+      - name: encryption-provider
+        hostPath: /etc/kubernetes/encryption-provider.yaml
+        mountPath: /etc/kubernetes/encryption-provider.yaml
+    dns:
+      imageRepository: quay.io
+      imageTag: coredns
+    etcd:
+      local:
+        dataDir: /var/lib/etcd
+        extraArgs:
+          cipher-suites: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256
+          cert-file: /etc/kubernetes/pki/etcd/server.crt
+          key-file: /etc/kubernetes/pki/etcd/server.key
+          client-cert-auth: "true"
+          auto-tls: "false"
+          peer-client-cert-auth: "true"
+          peer-auto-tls: "false"
+          trusted-ca-file: /etc/kubernetes/pki/etcd/ca.crt
+    scheduler:
+      extraArgs:
+        profiling: "false"
+        kubeconfig: /etc/kubernetes/scheduler.conf
+        address: "127.0.0.1"
+        bind-address: "0.0.0.0"
+        port: "0"
+        secure-port: "10259"
+      extraVolumes:
+      - name: encryption-provider
+        hostPath: /etc/kubernetes/encryption-provider.yaml
+        mountPath: /etc/kubernetes/encryption-provider.yaml
+    files:  
+      - path: /etc/kubernetes/admission-control-config.yaml
+        owner: "root:root"
+        permissions: "0600"
+        content: |
+          apiVersion: apiserver.config.k8s.io/v1
+          kind: AdmissionConfiguration
+          plugins:
+          - name: EventRateLimit
+            path: /etc/kubernetes/event-rate-limit-config.yaml
+    users:
+      - name: test
+        groups: users
+        sudo: "ALL=(ALL:ALL) ALL"
+        shell: /bin/bash
+        sshAuthorizedKeys:
+          - test
+    initConfiguration:
+      criSocket: /run/containerd/containerd.sock
+      taints:
+      kubelet:
+        extraArgs:
+          cloud-provider: external
+          kube-reserved: cpu=300m,memory=300Mi,ephemeral-storage=2Gi,pid=2048
+          system-reserved: cpu=200m,memory=500Mi,ephemeral-storage=1Gi,pid=2048
+          eviction-soft: memory.available<950Mi,nodefs.available<15%,nodefs.inodesFree<10%,imagefs.available<20%,imagefs.inodesFree<25%
+          eviction-soft-grace-period: memory.available=1m30s,nodefs.available=1m30s,nodefs.inodesFree=1m30s,imagefs.available=1m30s,imagefs.inodesFree=1m30s
+          eviction-hard: memory.available<800Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<15%,imagefs.inodesFree<20%
+          protect-kernel-defaults: "true" 
+    joinConfiguration:
+      kubelet:
+        extraArgs:
+          cloud-provider: external
+          kube-reserved: cpu=300m,memory=300Mi,ephemeral-storage=2Gi,pid=2048
+          system-reserved: cpu=200m,memory=500Mi,ephemeral-storage=1Gi,pid=2048
+          eviction-soft: memory.available<950Mi,nodefs.available<15%,nodefs.inodesFree<10%,imagefs.available<20%,imagefs.inodesFree<25%
+          eviction-soft-grace-period: memory.available=1m30s,nodefs.available=1m30s,nodefs.inodesFree=1m30s,imagefs.available=1m30s,imagefs.inodesFree=1m30s
+          eviction-hard: memory.available<800Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<15%,imagefs.inodesFree<20%
+          protect-kernel-defaults: "true" 
+    preKubeadmCommands:
+      - sleep 10s
+    postKubeadmCommands:
+      - sleep 600s
+    useExperimentalRetryJoin: true
+    verbosity: 5
+
+  workers:
+    md-0:
+      labels:
+        test: labels
+      annotations: 
+        annotation: test
+      files:  
+        - path: /etc/kubernetes/admission-control-config.yaml
+          owner: "root:root"
+          permissions: "0600"
+          content: |
+            apiVersion: apiserver.config.k8s.io/v1
+            kind: AdmissionConfiguration
+            plugins:
+            - name: EventRateLimit
+              path: /etc/kubernetes/event-rate-limit-config.yaml
+      users:
+        - name: test
+          groups: users
+          sudo: "ALL=(ALL:ALL) ALL"
+          shell: /bin/bash
+          sshAuthorizedKeys:
+            - test
+      joinConfiguration:
+        criSocket: /run/containerd/containerd.sock
+        taints:
+        kubelet:
+          extraArgs:
+            cloud-provider: external
+            kube-reserved: cpu=300m,memory=300Mi,ephemeral-storage=2Gi,pid=2048
+            system-reserved: cpu=200m,memory=500Mi,ephemeral-storage=1Gi,pid=2048
+            eviction-soft: memory.available<950Mi,nodefs.available<15%,nodefs.inodesFree<10%,imagefs.available<20%,imagefs.inodesFree<25%
+            eviction-soft-grace-period: memory.available=1m30s,nodefs.available=1m30s,nodefs.inodesFree=1m30s,imagefs.available=1m30s,imagefs.inodesFree=1m30s
+            eviction-hard: memory.available<800Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<15%,imagefs.inodesFree<20%
+            protect-kernel-defaults: "true" 
+      preKubeadmCommands:
+        - sleep 10s
+      postKubeadmCommands:
+        - sleep 600s
+      useExperimentalRetryJoin: true
+      verbosity: 5
+    md-1:
+      joinConfiguration:
+        kubelet:
+          extraArgs:
+            cloud-provider: external
+            kube-reserved: cpu=300m,memory=300Mi,ephemeral-storage=2Gi,pid=2048
+            system-reserved: cpu=200m,memory=500Mi,ephemeral-storage=1Gi,pid=2048
+            eviction-soft: memory.available<950Mi,nodefs.available<15%,nodefs.inodesFree<10%,imagefs.available<20%,imagefs.inodesFree<25%
+            eviction-soft-grace-period: memory.available=1m30s,nodefs.available=1m30s,nodefs.inodesFree=1m30s,imagefs.available=1m30s,imagefs.inodesFree=1m30s
+            eviction-hard: memory.available<800Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<15%,imagefs.inodesFree<20%
+            protect-kernel-defaults: "true" 
+    md-2:
+      joinConfiguration:
+        kubelet:
+          extraArgs:
+            cloud-provider: external
+            kube-reserved: cpu=300m,memory=300Mi,ephemeral-storage=2Gi,pid=2048
+            system-reserved: cpu=200m,memory=500Mi,ephemeral-storage=1Gi,pid=2048
+            eviction-soft: memory.available<950Mi,nodefs.available<15%,nodefs.inodesFree<10%,imagefs.available<20%,imagefs.inodesFree<25%
+            eviction-soft-grace-period: memory.available=1m30s,nodefs.available=1m30s,nodefs.inodesFree=1m30s,imagefs.available=1m30s,imagefs.inodesFree=1m30s
+            eviction-hard: memory.available<800Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<15%,imagefs.inodesFree<20%
+            protect-kernel-defaults: "true" 
+
+            
+hetzner:
+  cluster:
+    annotations: 
+      hetznerCluster: annotation
+    labels:
+      hetznercluster: label
+    network:
+      enabled: true
+      cidrBlock: 10.0.0.0/8
+      subnetCidrBlock: 10.0.0.0/24
+      networkZone: eu-central
+    controlPlaneRegions:
+      - fsn1
+      - nbg1
+    controlPlaneEndpoint:
+      dns: test.local
+      port: 443
+    controlPlaneLoadBalancer:
+      region: nbg1
+      type: lb11
+      algorithm: least_connection
+      port: 6443
+      extraTargets:
+      - listenPort: 443
+        destinationPort: 6443
+        protocol: tcp
+    sshKeys: 
+    - name: "test-key"
+    hetznerSecretRef:
+      name: hetzner
+      key:
+        hcloudToken: token
+    placementGroups:
+      - name: control-plane
+        type: spread
+      - name: md-0
+        type: spread
+  hcloud:
+    controlPlane:
+      labels: 
+        test: label
+      annotations:
+        test: annotation
+      type: cp31
+      imageName: fedora-34
+      placementGroupName: control-plane
+      sshKeys:
+      - name: test-2
+    workers:
+      md-0:
+        labels: 
+          test: label
+        annotations: 
+          annotation: test
+        type: cpx41
+        imageName: test-image
+        placementGroupName: md-0
+        sshKeys: 
+          - name: test-2
+      md-1:
+        type: cpx31
+        imageName: test-image
+      md-2:
+        labels: 
+          test: label
+        annotations: 
+          annotation: test
+        type: cpx21
+        imageName: test-image
+        placementGroupName: md-0

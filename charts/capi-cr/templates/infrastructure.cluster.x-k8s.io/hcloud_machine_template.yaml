@@ -1,0 +1,65 @@
+{{- $root := . -}}
+{{- $cluster := .Values.cluster }}
+{{- $cpt := .Values.hetzner.hcloud.controlPlane }}
+{{- $hetznerCluster := .Values.hetzner.cluster }}
+{{- if eq "hetzner" (lower $cluster.infrastructureRef) -}}
+{{- if eq "hcloud" (lower $cluster.controlPlane.type) -}}
+kind: HCloudMachineTemplate
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+metadata:
+  name: {{ include "common.fullname" . }}-control-plane-{{ include "HCloudMachineTemplateSpec" (list $hetznerCluster $cpt ) | sha256sum | trunc -5 }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    {{- with $cpt.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    "helm.sh/resource-policy": keep
+  {{- include "common.labels.boilerplate" (list . $cpt ) | nindent 2 }}
+spec:
+  template:
+    spec:
+{{- include "HCloudMachineTemplateSpec" (list $hetznerCluster $cpt ) | nindent 6 }}
+{{- end }}
+
+{{/* Ranging through the available workers */}}
+{{- range $name, $wt := .Values.hetzner.hcloud.workers }}
+{{- if not (empty (pluck $name $cluster.workers | first )) }}
+---
+kind: HCloudMachineTemplate
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}-{{ include "HCloudMachineTemplateSpec" (list $hetznerCluster $wt ) | sha256sum | trunc -5 }}
+  namespace: {{ $.Release.Namespace }}
+  annotations:
+    {{- with $wt.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    "helm.sh/resource-policy": keep
+  {{- include "common.labels.boilerplate" (list $root $wt ) | nindent 2 }}
+spec:
+  template:
+    spec:
+      {{- include "HCloudMachineTemplateSpec" (list $hetznerCluster $wt ) | nindent 6 }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/* Template for specs and sha sum */}}
+{{- define "HCloudMachineTemplateSpec" -}}
+{{- $hetznerCluster := first . -}}
+{{- $part := last . -}}
+type: {{ $part.type | default "cpx31" | quote }}
+imageName: {{ $part.imageName | default "fedora-35" | quote }}
+{{- if hasKey $hetznerCluster "placementGroups" }}
+{{- if hasKey $part "placementGroupName" }}
+placementGroupName: {{ $part.placementGroupName }}
+{{- end }}
+{{- end }}
+{{- if hasKey $part "sshKeys" }}
+sshKeys:
+{{- with $part.sshKeys }}
+{{- toYaml . | nindent 0 }}
+{{- end }}
+{{- end }}
+{{- end -}}
