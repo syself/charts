@@ -8,7 +8,7 @@ image:
   repository: hetznercloud/hcloud-cloud-controller-manager
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v1.12.0"
+  tag: "v1.12.1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -28,8 +28,8 @@ privateNetwork:
 
 secret:
   create: false
-  name: hcloud # Name of an existing secret 
-  tokenKeyName: token # Name of an existing key for the hcloud-token in the above specified secret
+  name: hetzner # Name of an existing secret 
+  tokenKeyName: hcloud # Name of an existing key for the hcloud-token in the above specified secret
   networkKeyName: network # Name of an existing key for the hcloud-network in the above specified secret
 
 
@@ -42,8 +42,7 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podAnnotations: 
-  scheduler.alpha.kubernetes.io/critical-pod: ""
+podAnnotations: {}
 
 podSecurityContext: {}
   # fsGroup: 2000
