@@ -54,17 +54,19 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/capi-1.0.1/capi-1.0.1.tgz
     version: 1.0.1
-  ccm-hcloud:
+  capi-cr:
   - apiVersion: v2
-    appVersion: 1.12.1
-    created: "2022-01-28T21:29:28.096024611Z"
-    description: Helm Chart for Hcloud Cloud Controller Manager
-    digest: 0fa18541ad0decaa6a723fa74b2696e1fee81fd9cec37d652e831fc6f9852037
-    name: ccm-hcloud
+    created: "2022-01-28T21:29:40.03039255Z"
+    description: Helm Chart for deploying a Kubernetes Cluster with the cluster-api.
+    digest: d71ddd0cd7847254f7cf268c4c650dc91401327ba2a5909ef98316ddd823b459
+    home: https://github.com/syself/charts/tree/main/charts/cluster-api
+    icon: https://cluster-api.sigs.k8s.io/#kubernetes-cluster-apidiv-stylefloat-right-position-relative-display-inlineimg-srcimagesintroductionpng-width160px-div
+    name: capi-cr
     type: application
     urls:
-    - https://github.com/syself/charts/releases/download/ccm-hcloud-1.0.3/ccm-hcloud-1.0.3.tgz
-    version: 1.0.3
+    - https://github.com/syself/charts/releases/download/capi-cr-1.0.0/capi-cr-1.0.0.tgz
+    version: 1.0.0
+  ccm-hcloud:
   - apiVersion: v2
     appVersion: 1.12.1
     created: "2021-12-08T12:18:49.207149156Z"
@@ -127,4 +129,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2022-01-28T21:29:28.096052511Z"
+generated: "2022-01-28T21:29:40.030406751Z"
