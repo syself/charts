@@ -1,0 +1,34 @@
+{{- $cluster := .Values.cluster }}
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: {{ include "common.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- include "common.annotations.boilerplate" (list $cluster ) | nindent 2 }}
+  {{- include "common.labels.boilerplate" (list . $cluster ) | nindent 2 }}
+spec:
+  paused: {{ $cluster.paused | default "false" }}
+  clusterNetwork:
+    {{- if hasKey $cluster.network "podCIDRBlocks" }}
+    {{- if not (empty $cluster.network.podCIDRBlocks ) }}
+    pods:
+      cidrBlocks: 
+      {{- with $cluster.network.podCIDRBlocks }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if hasKey $cluster.network "serviceCIDRBlocks" }}
+    {{- if not (empty $cluster.network.serviceCIDRBlocks ) }}
+    services:
+      cidrBlocks: 
+      {{- with $cluster.network.serviceCIDRBlocks }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+    serviceDomain: {{ $cluster.serviceDomain | default "cluster.local" | quote }}
+  controlPlaneRef:
+   {{- include "kubeadm.controlPlaneRef.kubeadmControlPlane" (list $cluster ) | nindent 4 }}
+  infrastructureRef:
+   {{- include "infrastructureRef.cluster" (list $cluster ) | nindent 4 }}

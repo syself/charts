@@ -1,0 +1,62 @@
+{{- $root := . -}}
+{{- $cluster := .Values.cluster }}
+{{- $hccp := .Values.cluster.controlPlane }}
+{{- if not (empty ( dig "healthCheck" "unhealthyConditions" "" $hccp)) }}
+{{- $hccp = $hccp.healthCheck }}
+{{- if or $hccp.enabled (not (hasKey $hccp "enabled")) }}
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineHealthCheck
+metadata:
+  name: {{ include "common.fullname" . }}-control-plane
+  namespace: {{ .Release.Namespace }}
+  {{- include "common.annotations.boilerplate" (list $hccp ) | nindent 2 }}
+  {{- include "common.labels.boilerplate" (list . $hccp ) | nindent 2 }}
+spec:
+  clusterName: {{ $cluster.name | quote }}
+  maxUnhealthy: {{ $hccp.maxUnhealthy | default "100%" }}
+  nodeStartupTimeout: {{ $hccp.nodeStartupTimeout | default "20m" }}
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/control-plane: ""
+  unhealthyConditions:
+    {{- if hasKey $hccp "unhealthyConditions" }}
+    {{- with $hccp.unhealthyConditions }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- else }}
+    {{- required "unhealthyConditions is not set but required! "}}
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- range $name, $hcmt := .Values.cluster.workers }}
+{{- if or $hcmt.enabled (not (hasKey $hcmt "enabled")) }}
+{{- if not (empty ( dig "healthCheck" "unhealthyConditions" "" $hcmt)) }}
+{{- $hcmt = $hcmt.healthCheck -}}
+{{- if or $hcmt.enabled (not (hasKey $hcmt "enabled")) }}
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineHealthCheck
+metadata:
+  name: {{ include "common.fullname" $root }}-{{ $name }}
+  namespace: {{ $.Release.Namespace }}
+  {{- include "common.annotations.boilerplate" (list $hcmt ) | nindent 2 }}
+  {{- include "common.labels.boilerplate" (list $root $hcmt ) | nindent 2 }}
+spec:
+  clusterName: {{ include "common.fullname" $root | quote }}
+  maxUnhealthy: {{ $hcmt.maxUnhealthy | default "100%" }}
+  nodeStartupTimeout: {{ $hcmt.nodeStartupTimeout | default "20m" }}
+  selector:
+    matchLabels:
+      nodepool: {{ include "common.fullname" $root }}-{{ $name }}
+  unhealthyConditions:
+    {{- if hasKey $hcmt "unhealthyConditions" }}
+    {{- with $hcmt.unhealthyConditions }}
+    {{- toYaml . | nindent 4  }}
+    {{- end }}
+    {{- else }}
+    {{- required "unhealthyConditions is not set but required! "}}
+    {{- end }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
