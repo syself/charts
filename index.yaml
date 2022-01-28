@@ -54,18 +54,6 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/capi-1.0.1/capi-1.0.1.tgz
     version: 1.0.1
-  capi-cr:
-  - apiVersion: v2
-    created: "2022-01-28T21:29:40.03039255Z"
-    description: Helm Chart for deploying a Kubernetes Cluster with the cluster-api.
-    digest: d71ddd0cd7847254f7cf268c4c650dc91401327ba2a5909ef98316ddd823b459
-    home: https://github.com/syself/charts/tree/main/charts/cluster-api
-    icon: https://cluster-api.sigs.k8s.io/#kubernetes-cluster-apidiv-stylefloat-right-position-relative-display-inlineimg-srcimagesintroductionpng-width160px-div
-    name: capi-cr
-    type: application
-    urls:
-    - https://github.com/syself/charts/releases/download/capi-cr-1.0.0/capi-cr-1.0.0.tgz
-    version: 1.0.0
   ccm-hcloud:
   - apiVersion: v2
     appVersion: 1.12.1
@@ -112,6 +100,16 @@ entries:
   hcloud-csi:
   - apiVersion: v2
     appVersion: 1.6.0
+    created: "2022-01-28T21:30:10.23705702Z"
+    description: A Helm chart for Container Storage Interface driver for Hetzner Cloud.
+    digest: ffb3742e7543f81eb933256992533a8db232573eff6c250f168cb028ee87e50c
+    name: hcloud-csi
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/hcloud-csi-0.1.1/hcloud-csi-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.6.0
     created: "2021-12-08T12:15:52.251531278Z"
     description: A Helm chart for Container Storage Interface driver for Hetzner Cloud.
     digest: 01a3905f5f572fc4463806f4a795ec8ab23a9ad80876d2f74c26ef8d7ba81ad6
@@ -129,4 +127,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2022-01-28T21:29:40.030406751Z"
+generated: "2022-01-28T21:30:10.237075121Z"
