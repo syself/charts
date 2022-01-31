@@ -1,5 +1,4 @@
 cluster:
-  name: test-1
   network:
     podCIDRBlocks: 
       - 10.244.0.0/16
@@ -46,21 +45,16 @@ hetzner:
   cluster:
     controlPlaneRegions:
       - fsn1
-      - nbg1
-      - hel1
     controlPlaneEndpoint:
       port: 433
     controlPlaneLoadBalancer:
       region: fsn1
       type: lb11
-      algorithm: least_connections
+      algorithm: round_robin
       port: 6443
-      extraTargets:
-      - listenPort: 123
-        destinationPort: 123
-        protocol: tcp
-    sshKeys: 
-    - name: "test"
+    sshKeys:
+      hcloud: 
+        - name: "test"
     hetznerSecretRef:
       name: hetzner
       key:

@@ -62,10 +62,11 @@ spec:
   {{- toYaml . | nindent 2}}
   {{- end }}
   {{- end }}
-  {{- with $hetznerCluster.sshKeys }}
   sshKeys:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- with $hetznerCluster.sshKeys.hcloud }}
+    hcloud:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   hetznerSecretRef:
     name: {{ $hetznerCluster.hetznerSecretRef.name | default "hetzner" }}
     key:

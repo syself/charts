@@ -4,7 +4,6 @@ common:
       common: label
 
 cluster:
-  name: test
   annotations: 
     cluster-annotion: annotation
   labels:

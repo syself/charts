@@ -1,5 +1,5 @@
 apiVersion: v2
-name: hcloud-csi
+name: csi-hcloud
 description: A Helm chart for Container Storage Interface driver for Hetzner Cloud.
 
 # A chart can be either an 'application' or a 'library' chart.

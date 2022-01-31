@@ -38,22 +38,22 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $root | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") $root | sha256sum }}
-{{- if $deployment.pod}}
-{{- with $deployment.pod.annotations }}
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- end }}
+        {{- if $deployment.pod}}
+        {{- with $deployment.pod.annotations }}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+        {{- end }}
       labels:
         app: {{ include "common.name" $root }}
         {{- include "common.labels.selector" $root | nindent 8 }}
         {{- with $deployment.labels }}
         {{- toYaml $deployment.labels | nindent 8 }}
         {{- end }}
-{{- if $deployment.pod}}
-{{- with $deployment.pod.labels }}
-{{ toYaml .| indent 8 }}
-{{- end }}
-{{- end }}
+        {{- if $deployment.pod}}
+        {{- with $deployment.pod.labels }}
+        {{ toYaml .| nindent 8 }}
+        {{- end }}
+        {{- end }}
     spec:
 {{- if index $.Values "serviceAccountName" }}
       serviceAccountName: {{ $.Values.serviceAccountName }}
