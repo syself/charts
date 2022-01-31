@@ -3,5 +3,5 @@ name: capi-cr
 description: Helm Chart for deploying a Kubernetes Cluster with the cluster-api.
 home: https://github.com/syself/charts/tree/main/charts/cluster-api
 type: application
-version: 1.0.0
+version: 1.0.1
 icon: https://cluster-api.sigs.k8s.io/#kubernetes-cluster-apidiv-stylefloat-right-position-relative-display-inlineimg-srcimagesintroductionpng-width160px-div
