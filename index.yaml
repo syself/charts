@@ -56,6 +56,17 @@ entries:
     version: 1.0.1
   capi-cr:
   - apiVersion: v2
+    created: "2022-02-01T10:20:30.043556313Z"
+    description: Helm Chart for deploying a Kubernetes Cluster with the cluster-api.
+    digest: 5ac771bcf841723af2b81ddcb024d8150f01d528500c25be0fc27ace9c882480
+    home: https://github.com/syself/charts/tree/main/charts/cluster-api
+    icon: https://cluster-api.sigs.k8s.io/#kubernetes-cluster-apidiv-stylefloat-right-position-relative-display-inlineimg-srcimagesintroductionpng-width160px-div
+    name: capi-cr
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/capi-cr-1.0.3/capi-cr-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
     created: "2022-02-01T09:19:33.356361154Z"
     description: Helm Chart for deploying a Kubernetes Cluster with the cluster-api.
     digest: f45c1e79639620b86758defb8b0bf0bb0e12aab8a333a8e33e3894cf6e2cb068
@@ -161,4 +172,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2022-02-01T09:19:33.356377055Z"
+generated: "2022-02-01T10:20:30.043574314Z"
