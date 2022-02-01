@@ -1,10 +1,11 @@
 
 {{- define "infrastructureRef.cluster" -}}
 {{- $part := first . -}}
+{{- $root := last . -}}
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 {{- if eq "hetzner" (lower $part.infrastructureRef ) }}
 kind: HetznerCluster
-name: {{ $part.name }}
+name: {{ include "common.fullname" $root }}
 {{- else -}}
 {{required "Please specify a infrastrucutreRef - supported values are: hetzner" nil }}
 {{- end }}
@@ -31,7 +32,7 @@ Common deployment template for machineTemplate
 {{- if not (empty $mt) -}}
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HCloudMachineTemplate
-name: {{ .cluster.name }}-{{ .name }}-{{ include "HCloudMachineTemplateSpec" (list .root.Values.hetzner.cluster $mt) | sha256sum | trunc -5 }}
+name: {{ include "common.fullname" .root }}-{{ .name }}-{{ include "HCloudMachineTemplateSpec" (list .root.Values.hetzner.cluster $mt) | sha256sum | trunc -5 }}
 {{- else -}}
 {{- if eq "control-plane" (lower .name) -}}
 {{required (printf "Please specify a HCloudMachineTemplate under hetzner.hcloud.controlPlane" ) nil }}

@@ -1,9 +1,10 @@
 {{- define "kubeadm.controlPlaneRef.kubeadmControlPlane" -}}
 {{- $part := first . -}}
+{{- $root := last . -}}
 {{- if eq "kubeadm" (lower $part.controlPlaneRef) -}}
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlane
-name: {{ $part.name }}-control-plane
+name: {{ include "common.fullname" $root }}-control-plane
 {{- else -}}
 {{required "Please specify a controlPlaneRef - supported values are: kubeadm" nil }}
 {{- end }}
@@ -17,7 +18,7 @@ name: {{ $part.name }}-control-plane
 {{- if not (empty $kct) -}}
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
-name: {{ .cluster.name }}-{{ .name }}-{{ include "KubeadmConfigTemplateSpec" (list $kct) | sha256sum | trunc -5 }}
+name: {{ include "common.fullname" .root }}-{{ .name }}-{{ include "KubeadmConfigTemplateSpec" (list $kct) | sha256sum | trunc -5 }}
 {{- else -}}
 {{required (printf "Please specify a KubeadmConfigTemplate under kubeadm.workers.%s " .name ) nil }}
 {{- end }}
