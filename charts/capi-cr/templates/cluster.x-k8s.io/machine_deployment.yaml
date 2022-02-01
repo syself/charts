@@ -17,7 +17,7 @@ metadata:
   {{- include "common.labels.boilerplate" (list $root $md ) | nindent 2 }}
     nodepool: {{ include "common.fullname" $root }}-{{ $name }}
 spec:
-  clusterName: {{ $cluster.name | quote }}
+  clusterName: {{ include "common.fullname" $root | quote }}
   paused: {{ $md.paused | default false }}
   replicas: {{ $md.replicas | default 1 }}
   progressDeadlineSeconds: {{ $md.progressDeadlineSeconds | default 600}}
@@ -37,7 +37,7 @@ spec:
     matchLabels:
   template:
     spec:
-      clusterName: {{ $cluster.name | quote }}
+      clusterName: {{ include "common.fullname" $root | quote }}
       failureDomain: {{ required (printf "Please specify a failureDomain for cluster.workers.%s" $name) $md.failureDomain }}
       version: {{ required (printf "You need to specify a Kubernetes version like v1.x.x on cluster.workers.%s - please check that the related machineTemplate and node image support the corresponding Kubernetes version" $name) $md.version }}
       bootstrap:
