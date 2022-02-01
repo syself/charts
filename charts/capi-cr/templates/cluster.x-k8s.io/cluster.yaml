@@ -29,6 +29,6 @@ spec:
     {{- end }}
     serviceDomain: {{ $cluster.serviceDomain | default "cluster.local" | quote }}
   controlPlaneRef:
-   {{- include "kubeadm.controlPlaneRef.kubeadmControlPlane" (list $cluster ) | nindent 4 }}
+   {{- include "kubeadm.controlPlaneRef.kubeadmControlPlane" (list $cluster . ) | nindent 4 }}
   infrastructureRef:
-   {{- include "infrastructureRef.cluster" (list $cluster ) | nindent 4 }}
+   {{- include "infrastructureRef.cluster" (list $cluster . ) | nindent 4 }}
