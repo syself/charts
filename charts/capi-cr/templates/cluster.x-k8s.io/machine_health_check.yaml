@@ -12,7 +12,7 @@ metadata:
   {{- include "common.annotations.boilerplate" (list $hccp ) | nindent 2 }}
   {{- include "common.labels.boilerplate" (list . $hccp ) | nindent 2 }}
 spec:
-  clusterName: {{ $cluster.name | quote }}
+  clusterName: {{ include "common.fullname" $root | quote }}
   maxUnhealthy: {{ $hccp.maxUnhealthy | default "100%" }}
   nodeStartupTimeout: {{ $hccp.nodeStartupTimeout | default "20m" }}
   selector:
