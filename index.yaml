@@ -183,6 +183,18 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/hcloud-csi-0.1.0/hcloud-csi-0.1.0.tgz
     version: 0.1.0
+  konnectivity-agent:
+  - apiVersion: v2
+    appVersion: v0.0.27
+    created: "2022-02-02T21:01:42.788813325Z"
+    description: Helm Chart for deploying the konnectivity agent.
+    digest: 18e9e7a01ea593ea7b45b3361c49e30256075cd8527821436cf5fcfd1b1e34da
+    home: https://github.com/syself/charts/tree/main/charts/konnectivity-agent
+    name: konnectivity-agent
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/konnectivity-agent-1.0.0/konnectivity-agent-1.0.0.tgz
+    version: 1.0.0
   monochart:
   - apiVersion: v2
     created: "2021-12-08T12:15:52.366984786Z"
@@ -192,4 +204,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2022-02-01T20:07:44.180147921Z"
+generated: "2022-02-02T21:01:42.788837026Z"
