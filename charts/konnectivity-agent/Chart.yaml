@@ -1,0 +1,7 @@
+apiVersion: v2
+name: konnectivity-agent
+description: Helm Chart for deploying the konnectivity agent.
+home: https://github.com/syself/charts/tree/main/charts/konnectivity-agent
+type: application
+version: 1.0.0
+appVersion: v0.0.27
