@@ -1,0 +1,11 @@
+manifests:
+  - metadata:
+      name: raw-configmap
+      annotations:
+        this-is-an-annotation: "true"
+      labels:
+        this-is-an-label: "true"
+    apiVersion: v1
+    kind: ConfigMap
+    data:
+      this: is a key value pair
