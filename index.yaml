@@ -204,4 +204,13 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/monochart-0.2.0/monochart-0.2.0.tgz
     version: 0.2.0
-generated: "2022-02-02T21:01:42.788837026Z"
+  raw:
+  - apiVersion: v1
+    created: "2022-02-04T16:20:58.134118995Z"
+    description: A helm chart for deploying raw Kubernetes manifests
+    digest: 17d29cfec3a7d8364ca2b3a99b4d953fd196657165d944aab334e95c74f3f202
+    name: raw
+    urls:
+    - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-02-04T16:20:58.134152595Z"
