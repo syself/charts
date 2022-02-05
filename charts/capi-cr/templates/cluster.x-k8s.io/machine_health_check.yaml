@@ -47,7 +47,7 @@ spec:
   nodeStartupTimeout: {{ $hcmt.nodeStartupTimeout | default "20m" }}
   selector:
     matchLabels:
-      nodepool: {{ include "common.fullname" $root }}-{{ $name }}
+      cluster.x-k8s.io/deployment-name: {{ include "common.fullname" $root }}-{{ $name }}
   unhealthyConditions:
     {{- if hasKey $hcmt "unhealthyConditions" }}
     {{- with $hcmt.unhealthyConditions }}
