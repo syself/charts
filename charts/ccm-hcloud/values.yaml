@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: docker.io/hetznercloud/hcloud-cloud-controller-manager
@@ -17,7 +17,7 @@ fullnameOverride: ""
 env:
   debug: false
   loadBalancers: true
-  leaderElect: false
+  leaderElect: true
   hcloudApiToken:    # HCloud API Token, fill this only if you don't have a secret already with the token. And set secret.create=true
 
 privateNetwork:
@@ -33,7 +33,7 @@ secret:
   networkKeyName: network # Name of an existing key for the hcloud-network in the above specified secret
 
 pdb:
-  enabled: false
+  enabled: true
   maxUnavailable: 1
 
 serviceAccount:
