@@ -185,6 +185,16 @@ entries:
   csi-hcloud:
   - apiVersion: v2
     appVersion: 1.6.0
+    created: "2022-02-07T23:04:57.462727246Z"
+    description: A Helm chart for Container Storage Interface driver for Hetzner Cloud.
+    digest: 566c4feeeab8f195ea9a5136aa655f3d3bdcab1b98980d95effac4198c756f4d
+    name: csi-hcloud
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/csi-hcloud-0.1.2/csi-hcloud-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 1.6.0
     created: "2022-01-31T10:30:35.191311241Z"
     description: A Helm chart for Container Storage Interface driver for Hetzner Cloud.
     digest: c84b507ab71b67eaa85171a4c351569f199b3614914e0da0bc2ae8b12ebdfac2
@@ -269,4 +279,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-07T22:34:31.001196464Z"
+generated: "2022-02-07T23:04:57.462758546Z"
