@@ -3,5 +3,11 @@ name: konnectivity-agent
 description: Helm Chart for deploying the konnectivity agent.
 home: https://github.com/syself/charts/tree/main/charts/konnectivity-agent
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: v0.0.27
+dependencies:
+  - name: cluster-proportional-autoscaler
+    repository: https://kubernetes-sigs.github.io/cluster-proportional-autoscaler
+    version: 1.0.0
+    alias: proportional-autoscaler
+    condition: proportional-autoscaler.enabled
