@@ -27,10 +27,12 @@ jobs:
         with:
           version: v3.7.0 
 
+      - name: Add dependency chart repos
+        run: |
+          helm repo add cluster-proportional-autoscaler https://kubernetes-sigs.github.io/cluster-proportional-autoscaler
+
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@c25b74a986eb925b398320414b576227f375f946 
-        with:
-          version: v1.2.1 
+        uses: helm/chart-releaser-action@v1.3.0 
         env:
           CR_TOKEN: '${{ secrets.CR_TOKEN }}'
           CR_SKIP_EXISTING: true
