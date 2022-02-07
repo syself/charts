@@ -32,6 +32,9 @@ secret:
   tokenKeyName: hcloud # Name of an existing key for the hcloud-token in the above specified secret
   networkKeyName: network # Name of an existing key for the hcloud-network in the above specified secret
 
+pdb:
+  enabled: false
+  maxUnavailable: 1
 
 serviceAccount:
   # Specifies whether a service account should be created
