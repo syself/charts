@@ -217,6 +217,14 @@ entries:
     version: 0.2.0
   raw:
   - apiVersion: v1
+    created: "2022-02-07T11:53:30.435275376Z"
+    description: A helm chart for deploying raw Kubernetes manifests
+    digest: a772a59670d97c14eb8b16ece7e62a7dc52666ca2c8b64e4eb6876d0e187ab1e
+    name: raw
+    urls:
+    - https://github.com/syself/charts/releases/download/raw-1.0.1/raw-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v1
     created: "2022-02-04T16:20:58.134118995Z"
     description: A helm chart for deploying raw Kubernetes manifests
     digest: 17d29cfec3a7d8364ca2b3a99b4d953fd196657165d944aab334e95c74f3f202
@@ -224,4 +232,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-05T19:08:06.209878208Z"
+generated: "2022-02-07T11:53:30.435322878Z"
