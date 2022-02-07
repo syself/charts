@@ -8,7 +8,7 @@ spec:
     matchLabels:
       app: hcloud-csi-controller
   serviceName: hcloud-csi-controller
-  replicas: 1
+  replicas: {{ .Values.controller.replicas }}
   template:
     metadata:
       labels:
@@ -22,7 +22,7 @@ spec:
                   - key: "instance.hetzner.cloud/is-root-server"
                     operator: NotIn
                     values:
-                      - "true"   
+                      - "true"
       serviceAccount: hcloud-csi
       containers:
         - name: csi-attacher
@@ -62,7 +62,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secret.name }}
-                  key: token
+                  key: {{ .Values.secret.keyName }}
           volumeMounts:
             - name: socket-dir
               mountPath: /run/csi

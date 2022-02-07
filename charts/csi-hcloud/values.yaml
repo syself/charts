@@ -1,5 +1,6 @@
 secret:
-  name: hcloud
+  name: hetzner
+  keyName: hcloud
 
 prometheus:
   serviceMonitor:
@@ -12,4 +13,10 @@ storageClasses: {}
 # - name: hcloud-volumes
 #   defaultStorageClass: true
 #   reclaimPolicy: Retain
-  
+
+controller:
+  replicas: 2
+
+pdb:
+  enabled: true
+  maxUnavailable: 1
