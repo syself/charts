@@ -102,6 +102,16 @@ entries:
   ccm-hcloud:
   - apiVersion: v2
     appVersion: 1.12.1
+    created: "2022-02-07T21:50:25.179794874Z"
+    description: Helm Chart for Hcloud Cloud Controller Manager
+    digest: 0543c4a3f9a2a16f9ff740e99e4c0e5c15c01bd1cabff5bf63e39198f6b33374
+    name: ccm-hcloud
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/ccm-hcloud-1.0.6/ccm-hcloud-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v2
+    appVersion: 1.12.1
     created: "2022-02-01T20:07:44.180123121Z"
     description: Helm Chart for Hcloud Cloud Controller Manager
     digest: 2b5d5788b3ee9141e096524b2636272cf2673054c75859d8604a972fab14a725
@@ -197,6 +207,23 @@ entries:
   konnectivity-agent:
   - apiVersion: v2
     appVersion: v0.0.27
+    created: "2022-02-07T21:50:25.265477106Z"
+    dependencies:
+    - alias: proportional-autoscaler
+      condition: proportional-autoscaler.enabled
+      name: cluster-proportional-autoscaler
+      repository: https://kubernetes-sigs.github.io/cluster-proportional-autoscaler
+      version: 1.0.0
+    description: Helm Chart for deploying the konnectivity agent.
+    digest: 9754895b05b338b6b54700d25ef9c210e94e8f2dd83d909bd946147a53ccaed9
+    home: https://github.com/syself/charts/tree/main/charts/konnectivity-agent
+    name: konnectivity-agent
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/konnectivity-agent-1.0.1/konnectivity-agent-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: v0.0.27
     created: "2022-02-02T21:01:42.788813325Z"
     description: Helm Chart for deploying the konnectivity agent.
     digest: 18e9e7a01ea593ea7b45b3361c49e30256075cd8527821436cf5fcfd1b1e34da
@@ -232,4 +259,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-07T11:53:30.435322878Z"
+generated: "2022-02-07T21:50:25.265519306Z"
