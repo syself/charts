@@ -61,7 +61,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secret.name }}
-                  key: token
+                  key: {{ .Values.secret.keyName }}
             - name: KUBE_NODE_NAME
               valueFrom:
                 fieldRef:
