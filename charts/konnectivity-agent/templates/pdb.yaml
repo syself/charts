@@ -5,6 +5,7 @@ metadata:
   name: {{ include "konnectivity-agent.fullname" . }}
   namespace: {{ .Release.Namespace }}
 spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
   maxUnavailable: {{ .Values.pdb.maxUnavailable }}
   selector:
     matchLabels:
