@@ -34,7 +34,7 @@ secret:
 
 pdb:
   enabled: true
-  maxUnavailable: 1
+  minAvailable: 1
 
 serviceAccount:
   # Specifies whether a service account should be created

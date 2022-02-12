@@ -2,5 +2,10 @@ apiVersion: v2
 name: ccm-hcloud
 description: Helm Chart for Hcloud Cloud Controller Manager
 type: application
-version: 1.0.7
+home: https://github.com/syself/charts/tree/main/charts/ccm-hcloud
+maintainers:
+  - name: Syself
+    email: info@syself.com
+    url: https://github.com/syself
 appVersion: "1.12.1"
+version: 1.0.8
