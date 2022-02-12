@@ -1,6 +1,51 @@
+# Default values for csi-hcloud.
+
+common: 
+  labels:
+    standard: {}
+  pod:
+    pullSecrets: {}
+
+controller:
+  labels: {}
+  annotations: {}
+  service:
+    labels: {}
+    annotations: {}
+  replicas: 2
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+node:
+  labels: {}
+  annotations: {}
+  service:
+    labels: {}
+    annotations: {}
+
 secret:
   name: hetzner
   keyName: hcloud
+
+storageClasses: {}
+# - name: hcloud-volumes
+#   defaultStorageClass: true
+#   reclaimPolicy: Retain
+
+serviceAccount:
+  annotations: {}
+  labels: {}
+
+nameOverride: ""
+fullnameOverride: ""
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
 
 prometheus:
   serviceMonitor:
@@ -9,14 +54,3 @@ prometheus:
     labels:
       release: prometheus-operator
 
-storageClasses: {}
-# - name: hcloud-volumes
-#   defaultStorageClass: true
-#   reclaimPolicy: Retain
-
-controller:
-  replicas: 2
-
-pdb:
-  enabled: true
-  maxUnavailable: 1

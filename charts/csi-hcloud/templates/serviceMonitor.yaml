@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: hcloud-csi-controller
+  name: {{ include "common.fullname" . }}-controller
   namespace: {{ .Values.prometheus.serviceMonitor.namespace }}
   labels:
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -18,12 +18,17 @@ spec:
     - {{.Release.Namespace}}
   selector:
     matchLabels:
-      app: hcloud-csi-controller
+      component: controller
+      {{- include "common.labels.standard" . | nindent 6 }}
+      {{- include "common.labels.selector" . | nindent 6 }}
+      {{- with .Values.controller.labels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: hcloud-csi-node
+  name: {{ include "common.fullname" . }}-node
   namespace: {{ .Values.prometheus.serviceMonitor.namespace }}
   labels:
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -39,5 +44,10 @@ spec:
     - {{.Release.Namespace}}
   selector:
     matchLabels:
-      app: hcloud-csi
+      component: node
+      {{ include "common.labels.standard" . | nindent 6 }}
+      {{- include "common.labels.selector" . | nindent 6 }}
+      {{- with .Values.node.labels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 {{- end }}

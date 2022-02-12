@@ -2,11 +2,17 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: hcloud-csi
-  namespace: kube-system
+  name: {{ include "common.fullname" . }}
+  namespace: {{ .Release.Namespace }}
 spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
   maxUnavailable: {{ .Values.pdb.maxUnavailable }}
   selector:
     matchLabels:
-      app: hcloud-csi-controller
+      component: controller
+      {{- include "common.labels.standard" . | nindent 6 }}
+      {{- include "common.labels.selector" . | nindent 6 }}
+      {{- with .Values.controller.labels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 {{- end }}
