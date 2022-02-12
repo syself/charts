@@ -235,7 +235,7 @@ hetzner: {}
   #     # -- Specifies the destination Port of the loadbalancer this must be equal with cluster.apiServerPort
   #     port: 6443
   #     # -- Here extra Targets for the Hetzner Loadbalancer could be specified. 
-  #     extraTargets: []
+  #     extraServices: []
   #     # - listenPort: 443
   #     #   destinationPort: 6443
   #     #   protocol: tcp

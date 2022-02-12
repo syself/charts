@@ -325,7 +325,7 @@ hetzner:
       type: lb11
       algorithm: least_connection
       port: 6443
-      extraTargets:
+      extraServices:
       - listenPort: 443
         destinationPort: 6443
         protocol: tcp
