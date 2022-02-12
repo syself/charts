@@ -50,9 +50,9 @@ spec:
     type: {{ $hetznerCluster.controlPlaneLoadBalancer.type | default "lb11" }}
     algorithm: {{ $hetznerCluster.controlPlaneLoadBalancer.algorithm | default "round_robin" }}
     port: {{ $hetznerCluster.controlPlaneLoadBalancer.port | default "6443" }}
-    {{- if hasKey $hetznerCluster.controlPlaneLoadBalancer "extraTargets" }}
-    {{- with $hetznerCluster.controlPlaneLoadBalancer.extraTargets }}
-    extraTargets:
+    {{- if hasKey $hetznerCluster.controlPlaneLoadBalancer "extraServices" }}
+    {{- with $hetznerCluster.controlPlaneLoadBalancer.extraServices }}
+    extraServices:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     {{- end }}
