@@ -117,6 +117,21 @@ entries:
   ccm-hcloud:
   - apiVersion: v2
     appVersion: 1.12.1
+    created: "2022-03-08T09:40:28.405257646Z"
+    description: Helm Chart for Hcloud Cloud Controller Manager
+    digest: fc80c20ca7da61a4cd79673344273f0988827d69eaf1344ec9b39acbb8b4fc1e
+    home: https://github.com/syself/charts/tree/main/charts/ccm-hcloud
+    maintainers:
+    - email: info@syself.com
+      name: Syself
+      url: https://github.com/syself
+    name: ccm-hcloud
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/ccm-hcloud-1.0.10/ccm-hcloud-1.0.10.tgz
+    version: 1.0.10
+  - apiVersion: v2
+    appVersion: 1.12.1
     created: "2022-02-13T19:39:42.318003961Z"
     description: Helm Chart for Hcloud Cloud Controller Manager
     digest: 5795d514387382c91ceaa03e30cba0b4fd1b742faaa68e5b2a68fe33a2031fcc
@@ -344,4 +359,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-13T19:39:42.3184132Z"
+generated: "2022-03-08T09:40:28.405505858Z"
