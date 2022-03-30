@@ -59,7 +59,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - "/bin/hetzner-cloud-controller-manager"
-            - "--cloud-provider=hetzner"
+            - "--cloud-provider=hcloud"
             - "--leader-elect={{ .Values.env.leaderElect }}"
             - "--allow-untagged-cloud"
 {{- if .Values.privateNetwork.enabled }}
