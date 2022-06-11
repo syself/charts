@@ -381,6 +381,14 @@ entries:
     version: 1.0.0
   monochart:
   - apiVersion: v2
+    created: "2022-06-11T18:16:11.464167336Z"
+    description: Utility-first Helm Chart. One Chart to rule them all.
+    digest: d680b551a6468425aa3999fb7005611d27b18cca2370743747e365b214e35f93
+    name: monochart
+    urls:
+    - https://github.com/syself/charts/releases/download/monochart-0.3.0/monochart-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     created: "2021-12-08T12:15:52.366984786Z"
     description: Utility-first Helm Chart. One Chart to rule them all.
     digest: 1a0427dab520177ae4501a3356ea64f2244a641332b54b62ad1ac44bc09dba68
@@ -405,4 +413,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2022-04-21T13:47:09.364446824Z"
+generated: "2022-06-11T18:16:11.464222337Z"
