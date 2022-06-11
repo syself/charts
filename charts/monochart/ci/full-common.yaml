@@ -10,12 +10,12 @@ common:
   env:
     INLINE_ENV_NAME: ENV_VALUE
   envFrom:
-   secrets:
-     - secret-1
-     - secret-2
-   configMaps:
-     - config-1
-     - config-2
+    secrets:
+      - secret-1
+      - secret-2
+    configMaps:
+      - config-1
+      - config-2
   envFromFieldRefFieldPath:
     ENV_1: path-1
     ENV_2: path-2
@@ -27,67 +27,67 @@ common:
     pullSecrets:
       - test-secret
   containers:
-  - repository: nginx
-    tag: 1.15.3
-    pullPolicy: IfNotPresent
-    command: "test"
-    args:
-      - "--test"
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 3000
-      fsGroup: 2000
-    pullSecrets:
-      - "docker-secret-1"
-      - "docker-secret-2"
-    probes:
-      livenessProbe:
-        exec:
-          command: ["/grpc_health_probe", "-addr=:7444"]
-        initialDelaySeconds: 10
-      readinessProbe:
-        exec:
-          command: ["/grpc_health_probe", "-addr=:7444"]
-        initialDelaySeconds: 5
-    resources:
-      requests:
-        memory: "32Mi"
-        cpu: "50m"
-    autoscaling:
-      enabled: true
-      minReplicas: 5
-      maxReplicas: 20
-    pdb:
-      enabled: true
-      minAvailable: 2
-      maxUnavailable: 10
+    - repository: nginx
+      tag: 1.15.3
+      pullPolicy: IfNotPresent
+      command: "test"
+      args:
+        - "--test"
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+      pullSecrets:
+        - "docker-secret-1"
+        - "docker-secret-2"
+      probes:
+        livenessProbe:
+          exec:
+            command: ["/grpc_health_probe", "-addr=:7444"]
+          initialDelaySeconds: 10
+        readinessProbe:
+          exec:
+            command: ["/grpc_health_probe", "-addr=:7444"]
+          initialDelaySeconds: 5
+      resources:
+        requests:
+          memory: "32Mi"
+          cpu: "50m"
+      autoscaling:
+        enabled: true
+        minReplicas: 5
+        maxReplicas: 20
+      pdb:
+        enabled: true
+        minAvailable: 2
+        maxUnavailable: 10
   initContainers:
-  - name: init-container
-    repository: nginx
-    tag: 1.15.3
-    command: "test"
-    args:
-      - "--test"
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 3000
-      fsGroup: 2000
-    pullSecrets:
-      - "docker-secret-1"
-      - "docker-secret-2"
-    probes:
-      livenessProbe:
-        exec:
-          command: ["/grpc_health_probe", "-addr=:7444"]
-        initialDelaySeconds: 10
-      readinessProbe:
-        exec:
-          command: ["/grpc_health_probe", "-addr=:7444"]
-        initialDelaySeconds: 5
-    resources:
-      requests:
-        memory: "32Mi"
-        cpu: "50m"
+    - name: init-container
+      repository: nginx
+      tag: 1.15.3
+      command: "test"
+      args:
+        - "--test"
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+      pullSecrets:
+        - "docker-secret-1"
+        - "docker-secret-2"
+      probes:
+        livenessProbe:
+          exec:
+            command: ["/grpc_health_probe", "-addr=:7444"]
+          initialDelaySeconds: 10
+        readinessProbe:
+          exec:
+            command: ["/grpc_health_probe", "-addr=:7444"]
+          initialDelaySeconds: 5
+      resources:
+        requests:
+          memory: "32Mi"
+          cpu: "50m"
 
 regcred:
   enabled: true
@@ -115,12 +115,12 @@ service:
       internal: 9090
 
 jobs:
-  default: 
+  default:
     enabled: true
-  second: 
+  second:
     enabled: true
     activeDeadlineSeconds: 400
-    labels: 
+    labels:
       example-label-job: value
     annotations:
       helm.sh/hook-weight: "1"
@@ -141,9 +141,9 @@ cronjobs:
     activeDeadlineSeconds: 300
     restartPolicy: Never
     containers:
-    - repository: nginx
-      tag: 1.15.3
-      pullPolicy: Always
+      - repository: nginx
+        tag: 1.15.3
+        pullPolicy: Always
     pod:
       annotations:
         sidecar.istio.io/inject: "false"
@@ -176,14 +176,12 @@ secrets:
       secret.test.txt: |-
         some text
 
-
-
 deployments:
   default:
     enabled: true
     ## Pods replace strategy
     ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-    strategy: 
+    strategy:
       type: RollingUpdate
       rollingUpdate:
         maxUnavailable: 25%
@@ -196,7 +194,7 @@ deployments:
       hostAliases:
         - ip: 127.0.0.1
           hostnames:
-          - "foo.local"
+            - "foo.local"
     annotations:
       nginx.version: 1.15.3
     labels:
@@ -207,22 +205,22 @@ deployments:
       # use custom affinity rule. Here app MUST be on different host then postgres instance for it
       podAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-            - key: app
-              operator: In
-              values:
-              - postgresql
-            - key: release
-              operator: In
-              values:
-              - "test-postgresql"
-          topologyKey: "kubernetes.io/hostname"
+          - labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - postgresql
+                - key: release
+                  operator: In
+                  values:
+                    - "test-postgresql"
+            topologyKey: "kubernetes.io/hostname"
   second:
     enabled: true
     ## Pods replace strategy
     ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-    strategy: 
+    strategy:
       type: RollingUpdate
       rollingUpdate:
         maxUnavailable: 25%
@@ -252,7 +250,7 @@ certManager:
       enabled: true
       annotations:
         "cert-manager.io/issue-temporary-certificate": "true"
-      subject: 
+      subject:
         organizationalUnits:
           - "test"
       dnsNames:
@@ -266,11 +264,10 @@ certManager:
         privateKeySecretRef:
           name: credential-name-issuer-account-key
         solvers:
-        - http01:
-            istio:
-              gateways:
-              - default/testing
-
+          - http01:
+              istio:
+                gateways:
+                  - default/testing
 
 gateways:
   default:
@@ -278,25 +275,25 @@ gateways:
     nameOverride: testing
     istioController: Gateway-name
     servers:
-    - port:
-        number: 80
-        name: http
-        protocol: HTTP
-      hosts:
-      - test-service
-      tls:
-        httpsRedirect: true # https redirect is enabled
-    - port:
-        number: 443
-        name: https
-        protocol: HTTPS
-      hosts:
-      - test-service
-      tls:
-        credentialName: credential-name
-        mode: SIMPLE
-        privateKey: sds
-        serverCertificate: sds
+      - port:
+          number: 80
+          name: http
+          protocol: HTTP
+        hosts:
+          - test-service
+        tls:
+          httpsRedirect: true # https redirect is enabled
+      - port:
+          number: 443
+          name: https
+          protocol: HTTPS
+        hosts:
+          - test-service
+        tls:
+          credentialName: credential-name
+          mode: SIMPLE
+          privateKey: sds
+          serverCertificate: sds
 
 authorizationpolicys:
   default:
@@ -308,10 +305,10 @@ authorizationpolicys:
     action: CUSTOM
     provider: PROVIDER-NAME
     rules:
-    - to:
-      - operation:
-          hosts:
-            - test-service
+      - to:
+          - operation:
+              hosts:
+                - test-service
 
 # Istio Virtual Services for load balancer
 virtualServices:
@@ -328,206 +325,204 @@ virtualServices:
       - "public-ingress"
       - "private-ingress"
     http:
-    - name: "reviews-v2-routes"
-      match:
-        - uri:
-            prefix: "/wpcatalog"
-        - uri:
-            prefix: "/consumercatalog"
-      rewrite:
-        uri: "/newcatalog"
-      route:
-        - destination:
-            host: reviews.prod.svc.cluster.local
-            subset: v2
+      - name: "reviews-v2-routes"
+        match:
+          - uri:
+              prefix: "/wpcatalog"
+          - uri:
+              prefix: "/consumercatalog"
+        rewrite:
+          uri: "/newcatalog"
+        route:
+          - destination:
+              host: reviews.prod.svc.cluster.local
+              subset: v2
 
-    - name: "reviews-v1-route"
-      route:
-        - destination:
-            host: reviews.prod.svc.cluster.local
-            subset: v1
-      corsPolicy:
-        allowOrigin:
-          - example.com
-        allowMethods:
-          - POST
-          - GET
-        allowCredentials: false
-        allowHeaders:
-          - X-Foo-Bar
-        maxAge: "24h"
+      - name: "reviews-v1-route"
+        route:
+          - destination:
+              host: reviews.prod.svc.cluster.local
+              subset: v1
+        corsPolicy:
+          allowOrigin:
+            - example.com
+          allowMethods:
+            - POST
+            - GET
+          allowCredentials: false
+          allowHeaders:
+            - X-Foo-Bar
+          maxAge: "24h"
 
-    - name: "cors"
-      route:
-        - destination:
-            host: ratings.prod.svc.cluster.local
-            subset: v1
-      corsPolicy:
-        allowOrigin:
-          - example.com
-        allowMethods:
-          - POST
-          - GET
-        allowCredentials: false
-        allowHeaders:
-          - X-Foo-Bar
-        maxAge: "24h"
+      - name: "cors"
+        route:
+          - destination:
+              host: ratings.prod.svc.cluster.local
+              subset: v1
+        corsPolicy:
+          allowOrigin:
+            - example.com
+          allowMethods:
+            - POST
+            - GET
+          allowCredentials: false
+          allowHeaders:
+            - X-Foo-Bar
+          maxAge: "24h"
 
-    - name: "fault-injection-abort"
-      route:
-        - destination:
-            host: ratings.prod.svc.cluster.local
-            subset: v1
-      fault:
-        abort:
-          percentage:
-            value: 0.1
-          httpStatus: 400
+      - name: "fault-injection-abort"
+        route:
+          - destination:
+              host: ratings.prod.svc.cluster.local
+              subset: v1
+        fault:
+          abort:
+            percentage:
+              value: 0.1
+            httpStatus: 400
 
-    - name: "fault-injection-delay"
-      match:
-        - sourceLabels:
-            env: prod
-      route:
-        - destination:
-            host: reviews.prod.svc.cluster.local
-            subset: v1
-      fault:
-        delay:
-          percentage:
-            value: 0.1
-          fixedDelay: 5s
+      - name: "fault-injection-delay"
+        match:
+          - sourceLabels:
+              env: prod
+        route:
+          - destination:
+              host: reviews.prod.svc.cluster.local
+              subset: v1
+        fault:
+          delay:
+            percentage:
+              value: 0.1
+            fixedDelay: 5s
 
-    - name: "http-match-request"
-      match:
-        - headers:
-            end-user:
-              exact: jason
-          uri:
-            prefix: "/ratings/v2/"
-          ignoreUriCase: true
-      route:
-        - destination:
-            host: ratings.prod.svc.cluster.local
+      - name: "http-match-request"
+        match:
+          - headers:
+              end-user:
+                exact: jason
+            uri:
+              prefix: "/ratings/v2/"
+            ignoreUriCase: true
+        route:
+          - destination:
+              host: ratings.prod.svc.cluster.local
 
-    - name: "http-redirect"
-      match:
-        - uri:
-            exact: /v1/getProductRatings
-      redirect:
-        uri: /v1/bookRatings
-        authority: newratings.default.svc.cluster.local
+      - name: "http-redirect"
+        match:
+          - uri:
+              exact: /v1/getProductRatings
+        redirect:
+          uri: /v1/bookRatings
+          authority: newratings.default.svc.cluster.local
 
-    - name: "http-retry"
-      route:
-        - destination:
-            host: ratings.prod.svc.cluster.local
-            subset: v1
-      retries:
-        attempts: 3
-        perTryTimeout: 2s
-        retryOn: gateway-error,connect-failure,refused-stream
+      - name: "http-retry"
+        route:
+          - destination:
+              host: ratings.prod.svc.cluster.local
+              subset: v1
+        retries:
+          attempts: 3
+          perTryTimeout: 2s
+          retryOn: gateway-error,connect-failure,refused-stream
 
-    - name: "http-rewrite"
-      match:
-        - uri:
-            prefix: /ratings
-      rewrite:
-        uri: /v1/bookRatings
-      route:
-        - destination:
-            host: ratings.prod.svc.cluster.local
-            subset: v1
+      - name: "http-rewrite"
+        match:
+          - uri:
+              prefix: /ratings
+        rewrite:
+          uri: /v1/bookRatings
+        route:
+          - destination:
+              host: ratings.prod.svc.cluster.local
+              subset: v1
 
-    - name: "http-route-destination"
-      route:
-      - destination:
-          host: reviews.prod.svc.cluster.local
-          subset: v2
-        weight: 25
-      - destination:
-          host: reviews.prod.svc.cluster.local
-          subset: v1
-        weight: 75
+      - name: "http-route-destination"
+        route:
+          - destination:
+              host: reviews.prod.svc.cluster.local
+              subset: v2
+            weight: 25
+          - destination:
+              host: reviews.prod.svc.cluster.local
+              subset: v1
+            weight: 75
 
-    - name: "headers"
-      headers:
-        request:
-          set:
-            test: true
-      route:
-        - destination:
-            host: reviews.prod.svc.cluster.local
-            subset: v2
-          weight: 25
-        - destination:
-            host: reviews.prod.svc.cluster.local
-            subset: v1
-          headers:
-            response:
-              remove:
-                - foo
-          weight: 75
+      - name: "headers"
+        headers:
+          request:
+            set:
+              test: true
+        route:
+          - destination:
+              host: reviews.prod.svc.cluster.local
+              subset: v2
+            weight: 25
+          - destination:
+              host: reviews.prod.svc.cluster.local
+              subset: v1
+            headers:
+              response:
+                remove:
+                  - foo
+            weight: 75
 
-    - name: "monochart-port"
-      route:
-        - destination:
-            host: reviews.prod.svc.cluster.local
-            port: default
+      - name: "monochart-port"
+        route:
+          - destination:
+              host: reviews.prod.svc.cluster.local
+              port: default
 
-    - name: "monochart-omit-host"
-      route:
-        - destination:
+      - name: "monochart-omit-host"
+        route:
+          - destination:
 
-    - name: "monochart-omit-destination"
-      route:
-        - {}
+      - name: "monochart-omit-destination"
+        route:
+          - {}
 
-    - name: "monochart-self-usecase"
-      route:
-        - destination:
-            port: default
+      - name: "monochart-self-usecase"
+        route:
+          - destination:
+              port: default
 
     tcp:
-    - match:
-      - port: 27017
-      route:
-      - destination:
-          host: mongo.backup.svc.cluster.local
-          port:
-            number: 5555
-
+      - match:
+          - port: 27017
+        route:
+          - destination:
+              host: mongo.backup.svc.cluster.local
+              port:
+                number: 5555
 
 destinationRules:
   default:
     enabled: true
     trafficPolicy:
-        connectionPool:
-          tcp:
-            maxConnections: 100
-          http:
-            http2MaxRequests: 1000
-            maxRequestsPerConnection: 10
-        outlierDetection:
-          consecutive5xxErrors: 7
-          interval: 5m
-          baseEjectionTime: 15m
+      connectionPool:
+        tcp:
+          maxConnections: 100
+        http:
+          http2MaxRequests: 1000
+          maxRequestsPerConnection: 10
+      outlierDetection:
+        consecutive5xxErrors: 7
+        interval: 5m
+        baseEjectionTime: 15m
     subsets:
-    - name: version1
-      labels:
-        version: version1
-      trafficPolicy:
-        connectionPool:
-          tcp:
-            maxConnections: 100
-          http:
-            http2MaxRequests: 1000
-            maxRequestsPerConnection: 10
-        outlierDetection:
-          consecutive5xxErrors: 7
-          interval: 5m
-          baseEjectionTime: 15m
-
+      - name: version1
+        labels:
+          version: version1
+        trafficPolicy:
+          connectionPool:
+            tcp:
+              maxConnections: 100
+            http:
+              http2MaxRequests: 1000
+              maxRequestsPerConnection: 10
+          outlierDetection:
+            consecutive5xxErrors: 7
+            interval: 5m
+            baseEjectionTime: 15m
 
 oathkeeperRules:
   default:
@@ -535,21 +530,21 @@ oathkeeperRules:
     match:
       url: "<https|http>://example.com/api.proto.admin.v1alpha1.AdminService/<.*>"
       methods:
-      - POST
+        - POST
 
     authenticators:
-    - handler: cookie_session
-      config:
-        check_session_url: http://kratos-public:80/sessions/whoami
-        preserve_path: true
-        extra_from: "@this"
-        subject_from: "identity.id"
-        only:
-        - ory_kratos_session
+      - handler: cookie_session
+        config:
+          check_session_url: http://kratos-public:80/sessions/whoami
+          preserve_path: true
+          extra_from: "@this"
+          subject_from: "identity.id"
+          only:
+            - ory_kratos_session
     authorizer:
       handler: allow
     mutators:
-    - handler: header
+      - handler: header
   auth:
     enabled: true
     match:
@@ -585,18 +580,17 @@ crd:
           test: annotations
         spec:
           hosts:
-          - www.googleapis.com
+            - www.googleapis.com
           ports:
-          - number: 443
-            name: https
-            protocol: HTTPS
+            - number: 443
+              name: https
+              protocol: HTTPS
           location: MESH_EXTERNAL
           resolution: DNS
 
-
 serviceMonitors:
- ## Name of the ServiceMonitor to create
- ##
+  ## Name of the ServiceMonitor to create
+  ##
   default:
     ## Labels to set used for the ServiceMonitorSelector.
     labels:
@@ -621,7 +615,6 @@ serviceMonitors:
       ##
       matchNames: ["default"]
 
-
     ## Endpoints of the selected service to be monitored
     ##
     endpoints:
@@ -633,26 +626,25 @@ serviceMonitors:
       ## Mutually exclusive with port
       - targetPort: "8080"
 
-      ## File containing bearer token to be used when scraping targets
-      ##
+        ## File containing bearer token to be used when scraping targets
+        ##
         bearerTokenFile: ""
 
-      ## Interval at which metrics should be scraped
-      ##
+        ## Interval at which metrics should be scraped
+        ##
         interval: 30s
 
-      ## HTTP path to scrape for metrics
-      ##
+        ## HTTP path to scrape for metrics
+        ##
         path: /metrics
 
-      ## HTTP scheme to use for scraping
-      ##
+        ## HTTP scheme to use for scraping
+        ##
         scheme: http
 
-      ## TLS configuration to use when scraping the endpoint
-      ##
+        ## TLS configuration to use when scraping the endpoint
+        ##
         tlsConfig:
-
           # Path to the CA file
           #
           caFile: ""
@@ -673,21 +665,21 @@ serviceMonitors:
           #
           serverName: ""
 
-prometheusRules: 
+prometheusRules:
   default:
     labels:
       prometheus: kube-prometheus
     groups:
-    - name: prometheus.rules
-      rules:
-      - alert: PrometheusConfigReloadFailed
-        expr: prometheus_config_last_reload_successful == 0
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          description: Reloading Prometheus' configuration has failed for {{$labels.namespace}}/{{$labels.pod}}
-          summary: Reloading Promehteus' configuration failed
+      - name: prometheus.rules
+        rules:
+          - alert: PrometheusConfigReloadFailed
+            expr: prometheus_config_last_reload_successful == 0
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              description: Reloading Prometheus' configuration has failed for {{$labels.namespace}}/{{$labels.pod}}
+              summary: Reloading Promehteus' configuration failed
 
 persistence:
   enabled: true
@@ -714,11 +706,10 @@ persistence:
   #
   storageClass: "-"
 
-
 ingresses:
   default:
     enabled: true
-    port: port-name
+    port: 80
     labels:
       dns: "route53"
     annotations:
@@ -728,22 +719,22 @@ ingresses:
       "domain.com": /
       "www.domain.com": /
     tls:
-    - secretName: server-tls
-      hosts:
-      - domain.com
+      - secretName: server-tls
+        hosts:
+          - domain.com
 
 clusterRoles:
   default:
     enabled: true
-    annotations: 
-      key: val 
-    labels: 
-      labels-key: val 
+    annotations:
+      key: val
+    labels:
+      labels-key: val
     aggregationRule:
       clusterRoleSelectors:
         - test
     rules:
-      - resources: 
+      - resources:
           - pods
           - deployments
         verbs:
@@ -758,15 +749,15 @@ clusterRoles:
 Roles:
   default:
     enabled: true
-    annotations: 
-      key: val 
-    labels: 
-      labels-key: val 
+    annotations:
+      key: val
+    labels:
+      labels-key: val
     aggregationRule:
       clusterRoleSelectors:
         - test
     rules:
-      - resources: 
+      - resources:
           - pods
           - deployments
         verbs:
@@ -781,10 +772,10 @@ Roles:
 clusterRoleBindings:
   default:
     enabled: true
-    annotations: 
-      key: val 
-    labels: 
-      labels-key: val 
+    annotations:
+      key: val
+    labels:
+      labels-key: val
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
@@ -798,10 +789,10 @@ clusterRoleBindings:
 roleBindings:
   default:
     enabled: true
-    annotations: 
-      key: val 
-    labels: 
-      labels-key: val 
+    annotations:
+      key: val
+    labels:
+      labels-key: val
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole

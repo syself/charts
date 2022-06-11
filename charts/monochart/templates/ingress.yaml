@@ -3,7 +3,7 @@
 {{- range $name, $ingress := .Values.ingresses -}}
 {{- if $ingress.enabled }}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
 {{- with $ingress.annotations }}
@@ -19,15 +19,19 @@ metadata:
   name: {{ include "common.fullname" $root }}-{{ $name }}
   namespace: {{ $.Release.Namespace }}
 spec:
+  ingressClassName: {{ default "nginx" $ingress.className }}
   rules:
 {{- range $host, $path := $ingress.hosts }}
     - host: {{ $host }}
       http:
         paths:
           - path: {{ $path }}
+            pathType: Prefix
             backend:
-              serviceName: {{ $serviceName }}
-              servicePort: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ hasKey $ingress "port" | ternary $ingress.port "default" }}
 {{- end -}}
 {{- with $ingress.tls }}
   tls:
