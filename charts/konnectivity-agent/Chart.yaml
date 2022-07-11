@@ -13,5 +13,5 @@ dependencies:
     version: 1.0.0
     alias: proportional-autoscaler
     condition: proportional-autoscaler.enabled
-appVersion: v0.0.27
-version: 1.0.2
+appVersion: v0.0.32
+version: 1.0.3
