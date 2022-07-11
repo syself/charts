@@ -35,6 +35,7 @@ spec:
           command: ["/proxy-agent"]
           args: [
                   "--logtostderr=true",
+                  "--sync-forever=true",
                   "--ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
                   # Since the konnectivity server runs with hostNetwork=true,
                   # this is the IP address of the master machine.
@@ -52,6 +53,9 @@ spec:
               port: {{ .Values.ports.health }}
               path: /healthz
             initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
             timeoutSeconds: 15
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
