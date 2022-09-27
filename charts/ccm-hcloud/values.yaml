@@ -8,7 +8,7 @@ image:
   repository: docker.io/hetznercloud/hcloud-cloud-controller-manager
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v1.12.1"
+  tag: "v1.13.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -18,17 +18,17 @@ env:
   debug: false
   loadBalancers: true
   leaderElect: true
-  hcloudApiToken:    # HCloud API Token, fill this only if you don't have a secret already with the token. And set secret.create=true
+  hcloudApiToken: # HCloud API Token, fill this only if you don't have a secret already with the token. And set secret.create=true
 
 privateNetwork:
   enabled: false
   network:
-    id:   # If you have a secret with the key network leave it empty. If you specify it manually provide the name or ID of the Hcloud Network here. And set secret.create=true
-  clusterSubnet: 10.244.0.0/16   # Pod CIDR
+    id: # If you have a secret with the key network leave it empty. If you specify it manually provide the name or ID of the Hcloud Network here. And set secret.create=true
+  clusterSubnet: 10.244.0.0/16 # Pod CIDR
 
 secret:
   create: false
-  name: hetzner # Name of an existing secret 
+  name: hetzner # Name of an existing secret
   tokenKeyName: hcloud # Name of an existing key for the hcloud-token in the above specified secret
   networkKeyName: network # Name of an existing key for the hcloud-network in the above specified secret
 
@@ -47,10 +47,12 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
