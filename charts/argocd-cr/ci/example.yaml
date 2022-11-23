@@ -1,0 +1,27 @@
+# Tell ArgoCD where to find the project
+source: my-git-repo
+
+applications:
+  # Tooling to support CI/CD
+  - name: apps-of-apps
+    namespace: argocd
+    enabled: true
+    k8sAPI: https://kubernetes.default.svc
+    project: my-project
+    sourcePath: "."
+    sourceRef: "main"
+    chartName: "my-name"
+    ignoreDifferences:
+      - group: admissionregistration.k8s.io
+        kind: ValidatingWebhookConfiguration
+        name: cert-manager-webhook
+        jsonPointers:
+          - /webhooks/0/namespaceSelector/matchExpressions/2
+    helmValues:
+      - my-values.yaml
+
+  - name: example-app
+    enabled: true
+    sourcePath: "."
+    helmValues:
+      - example-values.yaml

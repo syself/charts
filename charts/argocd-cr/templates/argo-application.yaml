@@ -1,0 +1,136 @@
+{{- if .Values.applications }}
+{{- range $app := .Values.applications }}
+{{- $source := required "Please specify a source under .Values.source" $.Values.source }}
+{{- $sourceRef := "main" }}
+{{- if hasKey $app "sourceRef" }}
+{{- $sourceRef = $app.sourceRef }}
+{{- else if hasKey $.Values "sourceRef" }}
+{{- $sourceRef = $.Values.sourceRef }}
+{{- end }}
+{{- $project := "default" }}
+{{- if hasKey $app "project" }}
+{{- $project = $app.project }}
+{{- else if hasKey $.Values "project" }}
+{{- $project = $.Values.project }}
+{{- end }}
+{{- $namespace := "default" }}
+{{- if hasKey $app "namespace" }}
+{{- $namespace = $app.namespace }}
+{{- else if hasKey $.Values "namespace" }}
+{{- $namespace = $.Values.namespace }}
+{{- end }}
+{{- if $app.source }}
+{{- $source = $app.source }}
+{{- end }}
+{{- if $app.enabled }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+{{- if .values }}
+{{- if .values.fullnameOverride }}
+{{- if contains .values.fullnameOverride .name }}
+    app.kubernetes.io/instance: {{ .values.fullnameOverride }}
+{{- end }}
+{{- else }}
+    app.kubernetes.io/instance: {{ .name }}
+{{- end }}
+{{- end }}
+spec:
+  destination:
+    namespace: {{ $namespace }}
+    server: {{ .k8sAPI | default "https://kubernetes.default.svc" }}
+  project: {{ $project }}
+  source:
+{{- if or .helmValues .values }}
+    helm:
+{{- if .skipCrds }}
+      skipCrds: true
+{{- end }}
+{{- if .helmValues }}
+      valueFiles:
+{{- toYaml .helmValues | nindent 8 }}
+{{- end }}
+{{- if .values }}
+      values: |
+{{- toYaml .values | nindent 8 }}
+{{- end }}
+{{- end }}
+    {{- if .sourcePath }}
+    path: {{ .sourcePath | default "." }}
+    {{- end }}
+    repoURL: {{ $source }}
+    targetRevision: {{ $sourceRef | quote }}
+    {{- if not .sourcePath }}
+    chart: {{ .chartName | default .name }}
+    {{- end }}
+    {{- if .directory }}
+    directory:
+      {{- if .directory.recurse }}
+      recurse: true
+      {{- end }}
+      {{- if .directory.include }}
+      include: {{ .directory.include | quote }}
+      {{- end }}
+      {{- if .directory.exclude }}
+      exclude: {{ .directory.exclude | quote }}
+      {{- end }}
+    {{- end }}
+  syncPolicy:
+    automated:
+      {{- if or .syncPolicyPrune (not (hasKey . "syncPolicyPrune")) }}
+      prune: true
+      {{- end }}
+      {{- if or .syncPolicyselfHeal (not (hasKey . "syncPolicyselfHeal")) }}
+      selfHeal: true
+      {{- end }}
+      {{- if or .syncPolicyselfAllowEmpty (not (hasKey . "syncPolicyselfAllowEmpty")) }}
+      allowEmpty: true
+      {{- end }}
+    syncOptions:
+      - Validate=true
+    {{- if or .createNamespace (not (hasKey . "createNamespace")) }}
+      - CreateNamespace=true
+    {{- end }}
+    {{- if .extraSyncOptions }}
+    {{- toYaml .extraSyncOptions | nindent 6}}
+    {{- end }}
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+        - /spec/template/spec/containers/0/image
+        - /spec/template/spec/containers/1/image
+    - group: integreatly.org
+      kind: GrafanaDataSource
+      jsonPointers:
+        - /spec/datasources/0/secureJsonData/httpHeaderValue1
+    - group: ""
+      kind: ConfigMap
+      name: hubble-ca-cert
+      jsonPointers:
+      - /data/ca.crt
+    - group: ""
+      kind: Secret
+      name: hubble-relay-client-certs
+      jsonPointers:
+      - /data/ca.crt
+      - /data/tls.crt
+      - /data/tls.key
+    - group: ""
+      kind: Secret
+      name: hubble-server-certs
+      jsonPointers:
+      - /data/ca.crt
+      - /data/tls.crt
+      - /data/tls.key
+    {{- if .ignoreDifferences }}
+    {{- toYaml .ignoreDifferences | nindent 4 }}
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
