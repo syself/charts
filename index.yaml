@@ -9,6 +9,15 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/argo-cr-1.0.0/argo-cr-1.0.0.tgz
     version: 1.0.0
+  argocd-cr:
+  - apiVersion: v2
+    created: "2022-11-23T21:54:38.996413908Z"
+    description: 'This chart configures the ArgoCD Custom Resources. '
+    digest: 737d0d9f962068c4ffc414c81d40ce65a56ce5f8341539b39c0b378cecbcbde2
+    name: argocd-cr
+    urls:
+    - https://github.com/syself/charts/releases/download/argocd-cr-1.0.1/argocd-cr-1.0.1.tgz
+    version: 1.0.1
   cabpk:
   - apiVersion: v2
     appVersion: v1.0.1
@@ -488,4 +497,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2022-11-23T21:48:28.704676974Z"
+generated: "2022-11-23T21:54:38.996487209Z"
