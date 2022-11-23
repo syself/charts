@@ -1,0 +1,6 @@
+---
+apiVersion: "v2"
+name: "argo-cr"
+version: 1.0.0
+description: |
+  This chart configures the ArgoCD Custom Resources.

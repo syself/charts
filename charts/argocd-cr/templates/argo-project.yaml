@@ -1,0 +1,28 @@
+{{- if .Values.projects }}
+{{- range $project := .Values.projects }}
+{{- if $project.enabled }}
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  creationTimestamp: null
+  labels:
+    app: {{ .name }}
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  sourceRepos:
+  - '*'
+{{- if .destinations }}
+  destinations:
+{{- toYaml .destinations | nindent 2 }}
+{{- end }}
+{{- if .clusterResourceWhitelist }}
+  clusterResourceWhitelist:
+{{- toYaml .clusterResourceWhitelist | nindent 2 }}
+{{- end }}
+
+{{- end }}
+{{- end }}
+{{- end }}
