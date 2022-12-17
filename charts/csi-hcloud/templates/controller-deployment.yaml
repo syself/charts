@@ -53,8 +53,9 @@ spec:
         - name: socket-dir
           mountPath: /run/csi
       - name: hcloud-csi-driver
-        image: hetznercloud/hcloud-csi-driver:1.6.0
+        image: hetznercloud/hcloud-csi-driver:{{ default .Chart.AppVersion .Values.image.tag }}
         imagePullPolicy: Always
+        command: [/bin/hcloud-csi-driver-controller]
         env:
         - name: CSI_ENDPOINT
           value: unix:///run/csi/socket
