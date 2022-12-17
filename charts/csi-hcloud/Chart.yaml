@@ -7,4 +7,5 @@ maintainers:
   - name: Syself
     email: info@syself.com
     url: https://github.com/syself
-version: 0.2.0
+version: 0.3.0
+appVersion: 2.1.0

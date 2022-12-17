@@ -6,6 +6,9 @@ common:
   pod:
     pullSecrets: {}
 
+image:
+  tag: {}
+
 controller:
   labels: {}
   annotations: {}
@@ -30,7 +33,7 @@ secret:
   keyName: hcloud
 
 storageClasses: {}
-# - name: hcloud-volumes
+# - name: standard
 #   defaultStorageClass: true
 #   reclaimPolicy: Retain
 
