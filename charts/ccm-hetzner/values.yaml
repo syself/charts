@@ -8,7 +8,7 @@ image:
   repository: quay.io/syself/hetzner-cloud-controller-manager
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v1.13.0-0.0.1"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
