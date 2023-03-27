@@ -4,13 +4,12 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: {{ $val.name }}
-  namespace: kube-system
   annotations:
-    storageclass.kubernetes.io/is-default-class: "{{ $val.defaultStorageClass}}"
+    storageclass.kubernetes.io/is-default-class: {{ $val.defaultStorageClass | default "false" | quote }}
 provisioner: csi.hetzner.cloud
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
-reclaimPolicy: {{ $val.reclaimPolicy }}
+reclaimPolicy: {{ $val.reclaimPolicy | quote }}
 ---
 {{- end }}
 {{- end }}
