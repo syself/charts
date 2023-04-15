@@ -44,6 +44,29 @@ addonmanager.kubernetes.io/mode: Reconcile
 {{- end }}
 
 {{/*
+Common labels for server
+*/}}
+{{- define "konnectivity-server.labels" -}}
+helm.sh/chart: {{ include "konnectivity-agent.chart" . }}
+{{ include "konnectivity-server.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+addonmanager.kubernetes.io/mode: Reconcile
+{{- end }}
+
+
+{{/*
+Selector labels for server
+*/}}
+{{- define "konnectivity-server.selectorLabels" -}}
+app.kubernetes.io/name: konnectivity-server
+app.kubernetes.io/instance: konnectivity-server
+k8s-app: konnectivity-agent
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "konnectivity-agent.selectorLabels" -}}

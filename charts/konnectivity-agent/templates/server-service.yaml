@@ -1,0 +1,18 @@
+{{- if .Values.server.serviceMonitor.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: konnectivity-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "konnectivity-server.labels" . | indent 4}}
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: {{ .Values.ports.admin }}
+      protocol: TCP
+      targetPort: {{ .Values.ports.admin }}
+  selector:
+    {{- include "konnectivity-server.selectorLabels" . | nindent 4 }}
+{{- end }}
