@@ -178,12 +178,12 @@ controller:
   replicaCount: 2
 
   ## @param controller.hcloudToken.value  Specifies the value for the hcloudToken. Creates a secret from that value. If you have already a hcloud token secret leave this empty.
-  ## @param controller.hcloudToken.extistingSecret.name Specifies the name of an existing Secret for the hcloud Token
-  ## @param controller.hcloudToken.extistingSecret.key Specifies the key of an existing Secret for the hcloud Token
+  ## @param controller.hcloudToken.existingSecret.name Specifies the name of an existing Secret for the hcloud Token
+  ## @param controller.hcloudToken.existingSecret.key Specifies the key of an existing Secret for the hcloud Token
   ##
   hcloudToken:
     value: ""
-    extistingSecret:
+    existingSecret:
       name: hcloud
       key: token
 
