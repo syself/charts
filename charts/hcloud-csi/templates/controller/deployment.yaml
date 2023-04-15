@@ -139,8 +139,8 @@ spec:
                   name: {{ template "common.names.fullname" . }}-hcloud-token
                   key: token
                   {{- else }}
-                  name: {{ .Values.controller.hcloudToken.extistingSecret.name }}
-                  key: {{ .Values.controller.hcloudToken.extistingSecret.key }}
+                  name: {{ .Values.controller.hcloudToken.existingSecret.name }}
+                  key: {{ .Values.controller.hcloudToken.existingSecret.key }}
                   {{- end }}
             {{- if .Values.controller.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.controller.extraEnvVars "context" $) | nindent 12 }}
