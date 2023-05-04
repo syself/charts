@@ -1,14 +1,14 @@
-# Default values for ccm-hcloud-test.
+# Default values for ccm-hetzner-test.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: docker.io/hetznercloud/hcloud-cloud-controller-manager
+  repository: ghcr.io/syself/hetzner-cloud-controller-manager
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.14.0-beta.3"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -19,6 +19,8 @@ env:
   loadBalancers: true
   leaderElect: true
   hcloudApiToken: # HCloud API Token, fill this only if you don't have a secret already with the token. And set secret.create=true
+  robotUser: # Robot User, fill this only if you don't have a secret already with the token. And set secret.create=true
+  robotPassword: # Robot Password, fill this only if you don't have a secret already with the token. And set secret.create=true
 
 privateNetwork:
   enabled: false
@@ -29,8 +31,11 @@ privateNetwork:
 secret:
   create: false
   name: hetzner # Name of an existing secret
-  tokenKeyName: hcloud # Name of an existing key for the hcloud-token in the above specified secret
-  networkKeyName: network # Name of an existing key for the hcloud-network in the above specified secret
+  key:
+    token: hcloud # Name of an existing key for the hcloud-token in the above specified secret
+    robotUserName: robot-user
+    robotPassword: robot-password
+    network: network # Name of an existing key for the hcloud-network in the above specified secret
 
 pdb:
   enabled: true
