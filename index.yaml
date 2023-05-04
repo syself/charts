@@ -344,6 +344,22 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/ccm-hetzner-1.1.0/ccm-hetzner-1.1.0.tgz
     version: 1.1.0
+  ccm-hetzner-test:
+  - apiVersion: v2
+    appVersion: v0.14.0-beta.3
+    created: "2023-05-04T15:12:10.292480438Z"
+    description: Helm Chart for Hcloud Cloud Controller Manager
+    digest: 668412394cbf75b3177491c2129b4fd17d5036aed4d9156c6b46400eb67b5dea
+    home: https://github.com/syself/charts/tree/main/charts/ccm-hetzner-test
+    maintainers:
+    - email: info@syself.com
+      name: Syself
+      url: https://github.com/syself
+    name: ccm-hetzner-test
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/ccm-hetzner-test-0.0.1/ccm-hetzner-test-0.0.1.tgz
+    version: 0.0.1
   cert-manager:
   - apiVersion: v1
     appVersion: v1.4.0-alpha.0
@@ -608,4 +624,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2023-04-15T21:56:42.526922354Z"
+generated: "2023-05-04T15:12:10.292839043Z"
