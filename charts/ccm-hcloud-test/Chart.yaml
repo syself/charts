@@ -1,8 +1,8 @@
 apiVersion: v2
-name: ccm-hetzner-test
+name: ccm-hcloud-test
 description: Helm Chart for Hcloud Cloud Controller Manager
 type: application
-home: https://github.com/syself/charts/tree/main/charts/ccm-hetzner-test
+home: https://github.com/syself/charts/tree/main/charts/ccm-hcloud-test
 maintainers:
   - name: Syself
     email: info@syself.com

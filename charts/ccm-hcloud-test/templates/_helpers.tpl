@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "ccm-hetzner-test.name" -}}
+{{- define "ccm-hcloud-test.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "ccm-hetzner-test.fullname" -}}
+{{- define "ccm-hcloud-test.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,17 +26,17 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "ccm-hetzner-test.chart" -}}
+{{- define "ccm-hcloud-test.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "ccm-hetzner-test.labels" -}}
-helm.sh/chart: {{ include "ccm-hetzner-test.chart" . }}
+{{- define "ccm-hcloud-test.labels" -}}
+helm.sh/chart: {{ include "ccm-hcloud-test.chart" . }}
 app: ccm
-{{ include "ccm-hetzner-test.selectorLabels" . }}
+{{ include "ccm-hcloud-test.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -46,17 +46,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "ccm-hetzner-test.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "ccm-hetzner-test.name" . }}
+{{- define "ccm-hcloud-test.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "ccm-hcloud-test.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "ccm-hetzner-test.serviceAccountName" -}}
+{{- define "ccm-hcloud-test.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "ccm-hetzner-test.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "ccm-hcloud-test.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
