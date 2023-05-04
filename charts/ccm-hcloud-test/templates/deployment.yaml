@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "ccm-hetzner-test.fullname" . }}
+  name: {{ include "ccm-hcloud-test.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "ccm-hetzner-test.labels" . | nindent 4 }}
+    {{- include "ccm-hcloud-test.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: 5
   selector:
     matchLabels:
-      {{- include "ccm-hetzner-test.selectorLabels" . | nindent 6 }}
+      {{- include "ccm-hcloud-test.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,14 +18,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "ccm-hetzner-test.selectorLabels" . | nindent 8 }}
+        {{- include "ccm-hcloud-test.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       dnsPolicy: Default
-      serviceAccountName: {{ include "ccm-hetzner-test.serviceAccountName" . }}
+      serviceAccountName: {{ include "ccm-hcloud-test.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       tolerations:
@@ -58,7 +58,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
-            - "/bin/hetzner-cloud-controller-manager"
+            - "/bin/hcloud-cloud-controller-manager"
             - "--cloud-provider=hcloud"
             - "--leader-elect={{ .Values.env.leaderElect }}"
             - "--allow-untagged-cloud"
@@ -77,29 +77,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   {{- if .Values.secret.create }}
-                  name: {{ include "ccm-hetzner-test.fullname" . }}
+                  name: {{ include "ccm-hcloud-test.fullname" . }}
                   {{- else }}
                   name: {{ .Values.secret.name }}
                   {{- end }}
-                  key: {{ .Values.secret.key.token }}
-            - name: ROBOT_USER_NAME
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.secret.create }}
-                  name: {{ include "ccm-hetzner-test.fullname" . }}
-                  {{- else }}
-                  name: {{ .Values.secret.name }}
-                  {{- end }}
-                  key: {{ .Values.secret.key.robotUserName }}
-            - name: ROBOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.secret.create }}
-                  name: {{ include "ccm-hetzner-test.fullname" . }}
-                  {{- else }}
-                  name: {{ .Values.secret.name }}
-                  {{- end }}
-                  key: {{ .Values.secret.key.robotPassword }}
+                  key: {{ .Values.secret.tokenKeyName }}
             - name: HCLOUD_DEBUG
               value: "{{ .Values.env.debug }}"
             - name: HCLOUD_LOAD_BALANCERS_ENABLED
@@ -109,11 +91,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   {{- if .Values.secret.create }}
-                  name: {{ include "ccm-hetzner-test.fullname" . }}
+                  name: {{ include "ccm-hcloud-test.fullname" . }}
                   {{- else }}
                   name: {{ .Values.secret.name }}
                   {{- end }}
-                  key: {{ .Values.secret.key.network }}
+                  key: {{ .Values.secret.networkKeyName }}
             {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
