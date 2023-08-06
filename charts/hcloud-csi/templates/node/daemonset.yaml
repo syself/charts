@@ -71,7 +71,7 @@ spec:
           image: {{ include "common.images.image" (dict "imageRoot" .Values.node.image.CSINodeDriverRegistrar "global" .Values.global) }}
           imagePullPolicy: {{ .Values.node.image.CSINodeDriverRegistrar.pullPolicy }}
           args:
-            - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.hetzner.cloud/socket
+            - --kubelet-registration-path={{ .Values.node.kubeletDir }}/plugins/csi.hetzner.cloud/socket
           volumeMounts:
             - name: plugin-dir
               mountPath: /run/csi
@@ -95,7 +95,7 @@ spec:
           command: [/bin/hcloud-csi-driver-node]
           volumeMounts:
             - name: kubelet-dir
-              mountPath: /var/lib/kubelet
+              mountPath: {{ .Values.node.kubeletDir }}
               mountPropagation: "Bidirectional"
             - name: plugin-dir
               mountPath: /run/csi
@@ -143,15 +143,15 @@ spec:
       volumes:
         - name: kubelet-dir
           hostPath:
-            path: /var/lib/kubelet
+            path: {{ .Values.node.kubeletDir }}
             type: Directory
         - name: plugin-dir
           hostPath:
-            path: /var/lib/kubelet/plugins/csi.hetzner.cloud/
+            path: {{ .Values.node.kubeletDir }}/plugins/csi.hetzner.cloud/
             type: DirectoryOrCreate
         - name: registration-dir
           hostPath:
-            path: /var/lib/kubelet/plugins_registry/
+            path: {{ .Values.node.kubeletDir }}/plugins_registry/
             type: Directory
         - name: device-dir
           hostPath:
