@@ -1,12 +1,14 @@
 fullnameOverride: "csi"
 
 storageClasses:
-- name: standard
-  defaultStorageClass: true
+- name: hcloud
+  defaultStorageClass: false
   reclaimPolicy: Retain
   allowVolumeExpansion: true
 
 controller:
+  featureGates:
+    - Topology=true
   hcloudVolumeDefaultLocation: nbg1
   priorityClassName: "system-cluster-critical"
   resources:
@@ -57,6 +59,7 @@ controller:
         topologyKey: "kubernetes.io/hostname"
 
 node:
+  kubeletDir: '/var/lib/k0s/kubelet'
   priorityClassName: "system-node-critical"
   resources:
     CSINodeDriverRegistrar:

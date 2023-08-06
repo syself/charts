@@ -157,7 +157,7 @@ controller:
     hcloudCSIDriver:
       registry: docker.io
       repository: hetznercloud/hcloud-csi-driver
-      tag: 2.2.0
+      tag: v2.3.2
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -478,7 +478,7 @@ node:
     hcloudCSIDriver:
       registry: docker.io
       repository: hetznercloud/hcloud-csi-driver
-      tag: 2.2.0
+      tag: v2.3.2
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -494,6 +494,9 @@ node:
       ##
       pullSecrets: []
 
+  ## @param node.kubeletDir When running a k8s distro with non default kubelet path, set it here
+  ##
+  kubeletDir: '/var/lib/kubelet'  
 
   ## @param node.containerPorts.metrics node Metrics container port
   ## @param node.containerPorts.healthz node Health container port
