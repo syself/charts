@@ -516,6 +516,27 @@ entries:
     version: 0.1.0
   konnectivity-agent:
   - apiVersion: v2
+    appVersion: v0.1.3
+    created: "2023-08-16T10:02:37.372482529Z"
+    dependencies:
+    - alias: proportional-autoscaler
+      condition: proportional-autoscaler.enabled
+      name: cluster-proportional-autoscaler
+      repository: https://kubernetes-sigs.github.io/cluster-proportional-autoscaler
+      version: 1.0.0
+    description: Helm Chart for deploying the konnectivity agent.
+    digest: 3dbaf79f77e44ec8db95fd696a6440bbfd39e34194311bcc35d369b3799e76ad
+    home: https://github.com/syself/charts/tree/main/charts/konnectivity-agent
+    maintainers:
+    - email: info@syself.com
+      name: Syself
+      url: https://github.com/syself
+    name: konnectivity-agent
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/konnectivity-agent-1.0.6/konnectivity-agent-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v2
     appVersion: v0.1.2
     created: "2023-04-15T19:57:58.069885959Z"
     dependencies:
@@ -640,4 +661,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-04T15:25:36.369938863Z"
+generated: "2023-08-16T10:02:37.372695831Z"
