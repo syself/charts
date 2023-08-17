@@ -157,7 +157,7 @@ controller:
     hcloudCSIDriver:
       registry: docker.io
       repository: hetznercloud/hcloud-csi-driver
-      tag: 2.2.0
+      tag: 2.5.1
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -478,7 +478,7 @@ node:
     hcloudCSIDriver:
       registry: docker.io
       repository: hetznercloud/hcloud-csi-driver
-      tag: 2.2.0
+      tag: 2.5.1
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
