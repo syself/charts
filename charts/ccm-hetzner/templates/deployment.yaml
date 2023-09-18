@@ -59,9 +59,12 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - "/bin/hetzner-cloud-controller-manager"
-            - "--cloud-provider=hcloud"
+            {{- range $key, $value := $.Values.args }}
+            {{- if not (eq $value nil) }}
+            - "--{{ $key }}{{ if $value }}={{ $value }}{{ end }}"
+            {{- end }}
+            {{- end }}
             - "--leader-elect={{ .Values.env.leaderElect }}"
-            - "--allow-untagged-cloud"
 {{- if .Values.privateNetwork.enabled }}
             - "--allocate-node-cidrs=true"
             - "--cluster-cidr={{ .Values.privateNetwork.clusterSubnet }}"
