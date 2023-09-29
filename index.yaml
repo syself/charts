@@ -416,6 +416,21 @@ entries:
   csi-hcloud:
   - apiVersion: v2
     appVersion: v2.5.1
+    created: "2023-09-29T12:55:41.150330677Z"
+    description: Helm Chart for the CSI Driver on Hetzner Cloud
+    digest: 4017b4048d3babe8e3e666784a72d40fe4258c4e494f4506f0ffb73fdbb6f504
+    home: https://github.com/syself/charts/tree/main/charts/csi-hcloud
+    maintainers:
+    - email: info@syself.com
+      name: Syself
+      url: https://github.com/syself
+    name: csi-hcloud
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/csi-hcloud-1.0.4/csi-hcloud-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
+    appVersion: v2.5.1
     created: "2023-09-29T11:26:26.237260682Z"
     description: Helm Chart for the CSI Driver on Hetzner Cloud
     digest: 790568593dd78079ac3e5fc4516d1a3c49ab3342a2c44b71b4bd5cae055e5cc6
@@ -727,4 +742,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/raw-1.0.0/raw-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-29T11:26:26.237581286Z"
+generated: "2023-09-29T12:55:41.150459436Z"
