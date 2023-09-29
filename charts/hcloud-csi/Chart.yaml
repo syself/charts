@@ -7,5 +7,5 @@ maintainers:
   - name: Syself
     email: info@syself.com
     url: https://github.com/syself
-version: 1.0.1
-appVersion: 2.1.0
+version: 1.0.1 # TODO
+appVersion: 2.5.1

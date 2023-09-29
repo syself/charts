@@ -5,7 +5,7 @@ replicaCount: 1
 fullnameOverride: konnectivity-agent
 
 image:
-  repository: us.gcr.io/k8s-artifacts-prod/kas-network-proxy/proxy-agent
+  repository: registry.k8s.io/kas-network-proxy/proxy-agent
   pullPolicy: Always
 
 nameOverride: ""
