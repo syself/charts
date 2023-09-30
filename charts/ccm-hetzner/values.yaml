@@ -22,6 +22,10 @@ env:
   robotUser: # Robot User, fill this only if you don't have a secret already with the token. And set secret.create=true
   robotPassword: # Robot Password, fill this only if you don't have a secret already with the token. And set secret.create=true
 
+extraEnvVars: []
+##   - name: FOO
+##     value: "bar"
+
 privateNetwork:
   enabled: false
   network:
