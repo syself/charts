@@ -417,6 +417,10 @@ controller:
 ## Node
 ##
 node:
+  ## @param node.kubeletDir When running a k8s distro with non default kubelet path, set it here
+  ##
+  kubeletDir: '/var/lib/kubelet'  
+  
   ## @param node.image.CSINodeDriverRegistrar.registry csi-node-driver-registrar image registry
   ## @param node.image.CSINodeDriverRegistrar.repository csi-node-driver-registrar image repository
   ## @param node.image.CSINodeDriverRegistrar.tag csi-node-driver-registrar image tag (immutable tags are recommended)
