@@ -29,8 +29,10 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       tolerations:
-        # this taint is set by all kubelets running `--cloud-provider=external`
-        # so we should tolerate it to schedule the cloud controller manager
+        # Introduced with CAPI v1.4, more info: https://cluster-api.sigs.k8s.io/developer/providers/bootstrap.html#taint-nodes-at-creation
+        - key: "node.cluster.x-k8s.io/uninitialized"
+          effect: "NoSchedule"
+        # Allow HCCM itself to schedule on nodes that have not yet been initialized by HCCM.
         - key: "node.cloudprovider.kubernetes.io/uninitialized"
           value: "true"
           effect: "NoSchedule"
