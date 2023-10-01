@@ -130,7 +130,7 @@ server:
     #  foo: bar
 
 proportional-autoscaler:
-  enabled: true
+  enabled: false
   image:
     tag: 1.8.6
   fullnameOverride: konnectivity-agent-proportional-autoscaler
@@ -139,11 +139,11 @@ proportional-autoscaler:
 
   replicaCount: 2
 
-  config:
-    linear:
-      coresPerReplica: 32
-      nodesPerReplica: 4
-      min: 2
-      max: 50
-      preventSinglePointFailure: true
-      includeUnschedulableNodes: true
+  # config:
+  #   linear:
+  #     coresPerReplica: 32
+  #     nodesPerReplica: 4
+  #     min: 2
+  #     max: 50
+  #     preventSinglePointFailure: true
+  #     includeUnschedulableNodes: true
