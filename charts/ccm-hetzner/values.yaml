@@ -7,8 +7,6 @@
 args:
   cloud-provider: hcloud
   allow-untagged-cloud: ""
-  configure-cloud-routes: "false"
-
 
 replicaCount: 1
 
