@@ -20,9 +20,6 @@ spec:
         {{- include "konnectivity-agent.selectorLabels" . | nindent 8 }}
     spec:
       priorityClassName: system-cluster-critical
-      tolerations:
-        - key: "CriticalAddonsOnly"
-          operator: "Exists"
       serviceAccountName: {{ include "konnectivity-agent.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -35,15 +32,20 @@ spec:
           command: ["/proxy-agent"]
           args: [
                   "--logtostderr=true",
-                  "--sync-forever=true",
                   "--ca-cert=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
                   # Since the konnectivity server runs with hostNetwork=true,
                   # this is the IP address of the master machine.
                   "--proxy-server-host={{ .Values.cluster.host }}",
                   "--proxy-server-port={{ .Values.ports.proxy }}",
-                  "--admin-server-port={{ .Values.ports.admin }}",
                   "--health-server-port={{ .Values.ports.health }}",
-                  "--service-account-token-path=/var/run/secrets/tokens/konnectivity-agent-token"
+                  "--admin-server-port={{ .Values.ports.admin }}",
+                  "--sync-interval=5s",
+                  "--sync-interval-cap=30s",
+                  "--sync-forever=true",
+                  "--probe-interval=5s",
+                  "--keepalive-time=60s",
+                  "--service-account-token-path=/var/run/secrets/tokens/konnectivity-agent-token",
+                  "--v=3"
                   ]
           volumeMounts:
             - mountPath: /var/run/secrets/tokens
@@ -72,5 +74,13 @@ spec:
       {{- end }}
       {{- with .Values.affinity }}
       affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}
