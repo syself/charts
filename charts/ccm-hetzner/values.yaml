@@ -2,6 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# hccm program command line arguments.
+# The "--allocate-node-cidrs" + "--cluster-cidr" + "--leader-elect" arguments are managed by the chart and should *not* be set directly here.
+args:
+  cloud-provider: hcloud
+  allow-untagged-cloud: ""
+
 replicaCount: 1
 
 image:
