@@ -56,6 +56,12 @@ nodeSelector: {}
 
 affinity: {}
 
+tolerations:
+- key: "CriticalAddonsOnly"
+  operator: "Exists"
+
+topologySpreadConstraints: {}
+
 serviceMonitor:
   enabled: false
   ## Set extraLabels for the serviceMonitor object.
