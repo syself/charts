@@ -138,7 +138,7 @@ server:
 proportional-autoscaler:
   enabled: false
   image:
-    tag: 1.8.6
+    tag: v1.8.9
   fullnameOverride: konnectivity-agent-proportional-autoscaler
   options:
     target: deployment/konnectivity-agent
