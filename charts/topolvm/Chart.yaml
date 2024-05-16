@@ -1,0 +1,10 @@
+---
+apiVersion: "v2"
+name: "topolvm"
+version: "0"
+description: |
+  This chart installs and configures TopoLVM for Syself Autopilot.
+dependencies:
+  - name: "topolvm"
+    version: "14.1.2"
+    repository: "https://topolvm.github.io/topolvm"
