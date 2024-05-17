@@ -1,0 +1,60 @@
+topolvm:
+  lvmd:
+    managed: false
+    deviceClasses:
+      - name: dc-ssd
+        volumme-group: vg-ssd
+        type: thin
+        thin-pool:
+          name: pool-ssd
+          overprovision-ratio: 1.0
+        default: false
+        spare-gb: 10
+      - name: dc-nvme
+        volumme-group: vg-nvme
+        type: thin
+        thin-pool:
+          name: pool-nvme
+          overprovision-ratio: 1.0
+        default: false
+        spare-gb: 10
+      - name: dc-hdd
+        volumme-group: vg-hdd
+        type: thin
+        thin-pool:
+          name: pool-hdd
+          overprovision-ratio: 1.0
+        default: false
+        spare-gb: 10
+  storageClasses:
+    - name: local-ssd
+      storageClass:
+        fsType: ext4
+        volumeBindingMode: WaitForFirstConsumer
+        reclaimPolicy: Retain
+        allowVolumeExpansion: true
+        additionalParameters:
+          topolvm.io/device-class: "dc-ssd"
+    - name: local-nvme
+      storageClass:
+        fsType: ext4
+        volumeBindingMode: WaitForFirstConsumer
+        reclaimPolicy: Retain
+        allowVolumeExpansion: true
+        additionalParameters:
+          topolvm.io/device-class: "dc-nvme"
+    - name: local-hdd
+      storageClass:
+        fsType: ext4
+        volumeBindingMode: WaitForFirstConsumer
+        reclaimPolicy: Retain
+        allowVolumeExpansion: true
+        additionalParameters:
+          topolvm.io/device-class: "dc-hdd"
+  node:
+    lvmdEmbedded: true
+  controller:
+    nodeFinalize:
+      skipped: true
+  nodeSelector:
+    instance.hetzner.cloud/is-root-server: "true"
