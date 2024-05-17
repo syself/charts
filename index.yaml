@@ -918,6 +918,18 @@ entries:
     version: 1.0.0
   topolvm:
   - apiVersion: v2
+    created: "2024-05-17T17:31:07.911293967Z"
+    dependencies:
+    - name: topolvm
+      repository: https://topolvm.github.io/topolvm
+      version: 14.1.2
+    description: 'This chart installs and configures TopoLVM for Syself Autopilot. '
+    digest: 54a7652e213de32245ca3765d1bb0dc3b7ce61253d4a6ff0441fa0f9269f609f
+    name: topolvm
+    urls:
+    - https://github.com/syself/charts/releases/download/topolvm-1.2.0/topolvm-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
     created: "2024-05-17T14:07:29.029457626Z"
     dependencies:
     - name: topolvm
@@ -929,4 +941,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/topolvm-1.1.0/topolvm-1.1.0.tgz
     version: 1.1.0
-generated: "2024-05-17T14:07:29.029614428Z"
+generated: "2024-05-17T17:31:07.911459406Z"
