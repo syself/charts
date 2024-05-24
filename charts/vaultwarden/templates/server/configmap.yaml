@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common.names.fullname" . }}-env
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: server
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  DOMAIN: {{ .Values.server.appURL | quote }}
+  {{- if and .Values.server.env.smtp.host .Values.server.env.smtp.from }}
+  SMTP_HOST: {{ .Values.server.env.smtp.host | quote }}
+  SMTP_SECURITY: {{ .Values.server.env.smtp.security | quote }}
+  SMTP_PORT: {{ .Values.server.env.smtp.port | quote }}
+  {{- if .Values.server.env.smtp.authMechanism }}
+  SMTP_AUTH_MECHANISM: {{ .Values.server.env.smtp.authMechanism | quote }}
+  {{- end }}
+  SMTP_FROM: {{ .Values.server.env.smtp.from | quote }}
+  SMTP_FROM_NAME: {{ default "Vaultwarden" .Values.server.env.smtp.fromName | quote }}
+  SMTP_DEBUG: {{ .Values.server.env.smtp.debug | quote }}
+  SMTP_ACCEPT_INVALID_HOSTNAMES: {{ .Values.server.env.smtp.acceptInvalidHostnames | quote }}
+  SMTP_ACCEPT_INVALID_CERTS: {{ .Values.server.env.smtp.acceptInvalidCerts | quote }}
+  {{- end }}
+  {{- if .Values.server.env.websocket.enabled }}
+  WEBSOCKET_ENABLED: 'true'
+  WEBSOCKET_ADDRESS: {{ .Values.server.env.websocket.address | quote }}
+  WEBSOCKET_PORT: {{ .Values.server.env.websocket.port | quote }}
+  {{- end }}
+  {{- if .Values.server.env.data }}
+  DATA_FOLDER: {{ .Values.server.env.dataFolder | quote }}
+  {{- end }}
+  {{- if .Values.server.env.attachments }}
+  ATTACHMENTS_FOLDER: {{ .Values.server.env.attachmentsFolder | quote }}
+  {{- end }}
+  {{- if and .Values.server.env.rocket.address .Values.server.env.rocket.port }}
+  ROCKET_ADDRESS: {{ .Values.server.env.rocket.address | quote }}
+  ROCKET_PORT: {{ .Values.server.env.rocket.port | quote }}
+  ROCKET_WORKERS: {{ .Values.server.env.rocket.workers | quote }}
+  {{- end }}
+  {{- if .Values.server.env.sso.enabled }}
+  SSO_ENABLED: 'true'
+  SSO_ONLY: {{ .Values.server.env.sso.disablePasswordLogin | quote }}
+  SSO_CLIENT_ID: {{ .Values.server.env.sso.clientId | quote }}
+  SSO_CLIENT_SECRET: {{ .Values.server.env.sso.clientSecret | quote }}
+  SSO_AUTHORITY: {{ .Values.server.env.sso.authority | quote }}
+  {{- end }}
+  SHOW_PASSWORD_HINT: {{ .Values.server.env.showPasswordHint | quote }}
+  SIGNUPS_ALLOWED: {{ .Values.server.env.signupsAllowed | quote }}
+  INVITATIONS_ALLOWED: {{ .Values.server.env.invitationsAllowed | quote }}
+  {{- if .Values.server.env.signupDomainsWhitelist }}
+  SIGNUPS_DOMAINS_WHITELIST: {{ .Values.server.env.signupDomainsWhitelist | quote }}
+  {{- end }}
+  SIGNUPS_VERIFY: {{ .Values.server.env.signupsVerify | quote }}
+  WEB_VAULT_ENABLED: {{ .Values.server.env.webVaultEnabled | quote }}
+  {{- if .Values.server.env.logFile }}
+  LOG_FILE: {{ .Values.server.env.logFile | quote }}
+  {{- end }}
+  {{- if .Values.server.env.logLevel }}
+  LOG_LEVEL: {{ .Values.server.env.logLevel | quote }}
+  {{- end }}
+  DB_CONNECTION_RETRIES: {{ .Values.server.env.dbConnectionRetries | quote }}
+  DATABASE_MAX_CONNS: {{ .Values.server.env.databaseMaxConnections | quote }}
+  ENABLE_DB_WAL: {{ .Values.server.env.enableDbWAL | quote }}
+  INVITATION_ORG_NAME: {{ .Values.server.env.invitationOrgName | quote }}
+  ICON_BLACKLIST_NON_GLOBAL_IPS: {{ .Values.server.env.iconBlacklistNonGlobalIps | quote }}
+  IP_HEADER: {{ .Values.server.env.ipHeader | quote }}
+  {{- if .Values.server.env.pushNotifications }}
+  PUSH_ENABLED: 'true'
+  PUSH_INSTALLATION_ID: {{ .Values.server.env.pushNotifications.installationId | quote }}
+  PUSH_INSTALLATION_KEY: {{ .Values.server.env.pushNotifications.installationKey | quote }}
+  {{- end }}
+  {{- if and .Values.server.env.yubico.clientId .Values.server.env.yubico.secretKey }}
+  YUBICO_CLIENT_ID: {{ .Values.server.env.yubico.clientId | quote }}
+  YUBICO_SECRET_KEY: {{ .Values.server.env.yubico.secretKey | quote }}
+  {{- if .Values.server.env.yubico.server }}
+  YUBICO_SERVER: {{ .Values.server.env.yubico.server | quote }}
+  {{- end }}
+  {{- end }}
