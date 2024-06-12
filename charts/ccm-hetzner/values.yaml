@@ -56,6 +56,14 @@ serviceAccount:
 
 podAnnotations: {}
 
+## initContainers:
+##  - name: your-image-name
+##    image: your-image
+##    imagePullPolicy: Always
+##    command: ['sh', '-c', 'echo "hello world"']
+##
+initContainers: []
+
 podSecurityContext:
   {}
   # fsGroup: 2000

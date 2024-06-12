@@ -53,6 +53,10 @@ spec:
 {{- if .Values.privateNetwork.enabled }}
       hostNetwork: true
 {{- end }}
+      initContainers:
+        {{- if .Values.initContainers }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.initContainers "context" $) | nindent 8 }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
