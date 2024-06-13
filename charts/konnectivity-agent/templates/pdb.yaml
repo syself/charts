@@ -5,8 +5,12 @@ metadata:
   name: {{ include "konnectivity-agent.fullname" . }}
   namespace: {{ .Release.Namespace }}
 spec:
+  {{- if .Values.pdb.minAvailable }}
   minAvailable: {{ .Values.pdb.minAvailable }}
-  maxUnavailable: {{ .Values.pdb.maxUnavailable }}
+  {{- end  }}
+  {{- if or .Values.pdb.maxUnavailable ( not .Values.pdb.minAvailable ) }}
+  maxUnavailable: {{ .Values.pdb.maxUnavailable | default 1 }}
+  {{- end  }}
   selector:
     matchLabels:
       {{- include "konnectivity-agent.selectorLabels" . | nindent 6 }}

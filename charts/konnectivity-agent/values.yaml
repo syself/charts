@@ -20,7 +20,8 @@ ports:
 
 pdb:
   enabled: true
-  maxUnavailable: 2
+  # please note that you should only define one of minAvailable or maxUnavailable.
+  minAvailable: 1
 
 serviceAccount:
   # The name of the service account to use.
