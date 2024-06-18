@@ -63,6 +63,7 @@ spec:
             - "/bin/hetzner-cloud-controller-manager"
             - "--cloud-provider=hcloud"
             - "--leader-elect={{ .Values.env.leaderElect }}"
+            - "--allow-untagged-cloud"
 {{- if .Values.privateNetwork.enabled }}
             - "--allocate-node-cidrs=true"
             - "--cluster-cidr={{ .Values.privateNetwork.clusterSubnet }}"
