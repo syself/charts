@@ -28,9 +28,6 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: "konnectivity-agent"
 
-serverServiceAccount:
-  name: "konnectivity-server"
-
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -103,6 +100,8 @@ serviceMonitor:
   #  foo: bar
 
 server:
+  serviceAccount:
+    name: "konnectivity-server"
   serviceMonitor:
     enabled: false
     ## Set extraLabels for the serviceMonitor object.

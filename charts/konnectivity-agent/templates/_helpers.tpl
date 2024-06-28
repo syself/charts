@@ -91,8 +91,8 @@ Create the name of the service account to use for konnectivity-server
 */}}
 {{- define "konnectivity-server.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default .Values.serverServiceAccount.name }}
+{{- default .Values.server.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serverServiceAccount.name }}
+{{- default "default" .Values.server.serviceAccount.name }}
 {{- end }}
 {{- end }}
