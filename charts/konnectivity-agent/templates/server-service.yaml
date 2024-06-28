@@ -1,4 +1,3 @@
-{{- if .Values.server.serviceMonitor.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,10 +8,15 @@ metadata:
 spec:
   clusterIP: None
   ports:
+    {{- if .Values.server.serviceMonitor.enabled }}
     - name: http-metrics
       port: {{ .Values.ports.admin }}
       protocol: TCP
       targetPort: {{ .Values.ports.admin }}
+    {{- end }}
+    - name: agent-port
+      port: {{ .Values.ports.proxy }}
+      protocol: TCP
+      targetPort: {{ .Values.ports.proxy }}
   selector:
     {{- include "konnectivity-server.selectorLabels" . | nindent 4 }}
-{{- end }}
