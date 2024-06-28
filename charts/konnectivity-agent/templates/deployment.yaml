@@ -70,6 +70,13 @@ spec:
             successThreshold: 1
             failureThreshold: 3
             timeoutSeconds: 15
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              port: {{ .Values.ports.health }}
+              path: /readyz
+            initialDelaySeconds: 15
+            timeoutSeconds: 15
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
