@@ -8,15 +8,15 @@ metadata:
 spec:
   clusterIP: None
   ports:
+    - name: agent-port
+      port: {{ .Values.ports.proxy }}
+      protocol: TCP
+      targetPort: {{ .Values.ports.proxy }}
     {{- if .Values.server.serviceMonitor.enabled }}
     - name: http-metrics
       port: {{ .Values.ports.admin }}
       protocol: TCP
       targetPort: {{ .Values.ports.admin }}
     {{- end }}
-    - name: agent-port
-      port: {{ .Values.ports.proxy }}
-      protocol: TCP
-      targetPort: {{ .Values.ports.proxy }}
   selector:
     {{- include "konnectivity-server.selectorLabels" . | nindent 4 }}
