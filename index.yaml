@@ -697,6 +697,27 @@ entries:
   konnectivity-agent:
   - apiVersion: v2
     appVersion: v1.8.9
+    created: "2024-06-28T08:09:38.652753818Z"
+    dependencies:
+    - alias: proportional-autoscaler
+      condition: proportional-autoscaler.enabled
+      name: cluster-proportional-autoscaler
+      repository: https://kubernetes-sigs.github.io/cluster-proportional-autoscaler
+      version: 1.1.0
+    description: Helm Chart for deploying the konnectivity agent.
+    digest: 51793bca18158e17dc23d2902dc40d91a32b616f9029ef82b1edd04a5736677a
+    home: https://github.com/syself/charts/tree/main/charts/konnectivity-agent
+    maintainers:
+    - email: info@syself.com
+      name: Syself
+      url: https://github.com/syself
+    name: konnectivity-agent
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/konnectivity-agent-1.0.12/konnectivity-agent-1.0.12.tgz
+    version: 1.0.12
+  - apiVersion: v2
+    appVersion: v1.8.9
     created: "2024-04-28T12:59:38.406727341Z"
     dependencies:
     - alias: proportional-autoscaler
@@ -971,4 +992,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/topolvm-1.1.0/topolvm-1.1.0.tgz
     version: 1.1.0
-generated: "2024-06-18T08:41:55.388520804Z"
+generated: "2024-06-28T08:09:38.652990049Z"
