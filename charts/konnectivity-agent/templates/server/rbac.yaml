@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:konnectivity-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "konnectivity-server.labels" . | indent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: system:konnectivity-server
