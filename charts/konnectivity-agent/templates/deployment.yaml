@@ -85,7 +85,7 @@ spec:
             sources:
               - serviceAccountToken:
                   path: konnectivity-agent-token
-                  audience: system:konnectivity-agent
+                  audience: system:konnectivity-server
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
