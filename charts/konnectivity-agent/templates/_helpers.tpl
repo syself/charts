@@ -63,7 +63,7 @@ Selector labels for server
 {{- define "konnectivity-server.selectorLabels" -}}
 app.kubernetes.io/name: konnectivity-server
 app.kubernetes.io/instance: konnectivity-server
-k8s-app: konnectivity-server
+k8s-app: konnectivity-agent
 {{- end }}
 
 {{/*
@@ -83,16 +83,5 @@ Create the name of the service account to use
 {{- default (include "konnectivity-agent.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use for konnectivity-server
-*/}}
-{{- define "konnectivity-server.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default .Values.server.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.server.serviceAccount.name }}
 {{- end }}
 {{- end }}
