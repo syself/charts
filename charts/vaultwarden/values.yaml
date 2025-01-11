@@ -191,8 +191,8 @@ server:
     webVaultEnabled: true
 
     sso:
-      enabled: true
-      disablePasswordLogin: true
+      enabled: false
+      disablePasswordLogin: false
       clientId: ""
       clientSecret: ""
       authority: ""
