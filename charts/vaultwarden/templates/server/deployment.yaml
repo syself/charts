@@ -92,6 +92,27 @@ spec:
                   key: {{ .Values.server.databaseURL.existingSecret.key }}
                   {{- end }}
             {{- end }}
+            {{- if (and (eq (default "" (toString .Values.server.env.sso.clientId)) "") (not (eq (default "" (toString .Values.server.sso.clientIdFromSecret.name)) ""))) }}
+            - name: SSO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.server.sso.clientIdFromSecret.name }}
+                  key: {{ .Values.server.sso.clientIdFromSecret.key }}
+            {{- end }}
+            {{- if (and (eq (default "" (toString .Values.server.env.sso.clientSecret)) "") (not (eq (default "" (toString .Values.server.sso.clientSecretFromSecret.name)) ""))) }}
+            - name: SSO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.server.sso.clientSecretFromSecret.name }}
+                  key: {{ .Values.server.sso.clientSecretFromSecret.key }}
+            {{- end }}
+            {{- if (and (eq (default "" (toString .Values.server.env.sso.authority)) "") (not (eq (default "" (toString .Values.server.sso.authorityFromSecret.name)) ""))) }}
+            - name: SSO_AUTHORITY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.server.sso.authorityFromSecret.name }}
+                  key: {{ .Values.server.sso.authorityFromSecret.key  }}
+            {{- end }}
           envFrom:
             - configMapRef:
                 name: {{ template "common.names.fullname" . }}-env

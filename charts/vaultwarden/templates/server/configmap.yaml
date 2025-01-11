@@ -45,9 +45,23 @@ data:
   {{- if .Values.server.env.sso.enabled }}
   SSO_ENABLED: 'true'
   SSO_ONLY: {{ .Values.server.env.sso.disablePasswordLogin | quote }}
-  SSO_CLIENT_ID: {{ .Values.server.env.sso.clientId | quote }}
-  SSO_CLIENT_SECRET: {{ .Values.server.env.sso.clientSecret | quote }}
-  SSO_AUTHORITY: {{ .Values.server.env.sso.authority | quote }}
+
+  {{- if .Values.server.env.sso.existingSecretEnabled -}}
+
+  {{ else }}
+    {{- if and .Values.server.env.sso.clientId (ne .Values.server.env.sso.clientId "") }}
+    SSO_CLIENT_ID: {{ .Values.server.env.sso.clientId | quote }}
+    {{- end }}
+    {{- if and .Values.server.env.sso.clientSecret (ne .Values.server.env.sso.clientSecret "") }}
+    SSO_CLIENT_SECRET: {{ .Values.server.env.sso.clientSecret | quote }}
+    {{- end }}
+    {{- if and .Values.server.env.sso.authority (ne .Values.server.env.sso.authority "") }}
+    SSO_AUTHORITY: {{ .Values.server.env.sso.authority | quote }}
+    {{- end }}
+  {{- end }}
+  SSO_FRONTEND: {{ .Values.server.env.sso.frontend | quote }}
+  SSO_CLIENT_CACHE_EXPIRATION: {{ .Values.server.env.sso.cache_expiration | quote }}
+  SSO_SCOPES: {{ .Values.server.env.sso.scopes | quote }}
   {{- end }}
   SHOW_PASSWORD_HINT: {{ .Values.server.env.showPasswordHint | quote }}
   SIGNUPS_ALLOWED: {{ .Values.server.env.signupsAllowed | quote }}

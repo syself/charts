@@ -83,10 +83,11 @@ server:
   ## @param server.databaseURL.existingSecret.key Specifies the key of an existing Secret for the database URL
   ##
   databaseURL:
-    value: ""
-    existingSecret: {}
-      # name: postgres-cluster-app
-      # key: uri
+    # value: ""
+    # existingSecret:
+    #   {}
+    # name: postgres-cluster-app
+    # key: uri
 
   ## @param server.appURL URL where the app will be accessible. Used a needed env var for vaultwarden and for the ingress, if enabled.
   appURL: ""
@@ -106,7 +107,6 @@ server:
   ##
   containerPorts:
     frontend: 80
-
 
   ## Vaultwarden environment variables
   ## ref: https://github.com/dani-garcia/vaultwarden/blob/main/.env.template
@@ -156,6 +156,22 @@ server:
   ## @param server.env.smtp.acceptInvalidCerts
   ## @param server.env.smtp.debug
   ## @param server.env.pushNotifications
+
+  sso:
+    existingSecretEnabled: true
+    clientIdFromSecret:
+      existingSecret:
+        name: ""
+        key: ""
+    clientSecretFromSecret:
+      existingSecret:
+        name: ""
+        key: ""
+    authorityFromSecret:
+      existingSecret:
+        name: ""
+        key: ""
+
   env:
     dataFolder: "/data"
     attachmentsFolder: "/data/attachments"
@@ -175,11 +191,12 @@ server:
     webVaultEnabled: true
 
     sso:
-      enabled: false
-      disablePasswordLogin: false
-      clientId: vaultwarden
-      clientSecret: vaultwarden
+      enabled: true
+      disablePasswordLogin: true
+      clientId: ""
+      clientSecret: ""
       authority: ""
+      scopes: ""
 
     websocket:
       enabled: true
@@ -214,7 +231,8 @@ server:
       acceptInvalidCerts: "false"
       debug: false
 
-    pushNotifications: {}
+    pushNotifications:
+      {}
       # installationId: ""
       # installationKey: ""
 
@@ -224,7 +242,7 @@ server:
     ## @param server.service.ports.frontend vaultwarden server service frontend port
     ports:
       frontend: 80
-    
+
     ## @param server.service.annotations Additional custom annotations for vaultwarden server service
     annotations: {}
 
@@ -240,7 +258,8 @@ server:
     enableTLS: true
 
     ## @param server.ingress.annotations Additional custom annotations for vaultwarden ingress
-    annotations: {}
+    annotations:
+      {}
       ##
       # cert-manager.io/cluster-issuer: letsencrypt-staging
       # external-dns.alpha.kubernetes.io/ttl: "1m"
