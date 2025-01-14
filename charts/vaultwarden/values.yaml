@@ -160,17 +160,14 @@ server:
   sso:
     existingSecretEnabled: true
     clientIdFromSecret:
-      existingSecret:
-        name: ""
-        key: ""
+      name: ""
+      key: ""
     clientSecretFromSecret:
-      existingSecret:
-        name: ""
-        key: ""
+      name: ""
+      key: ""
     authorityFromSecret:
-      existingSecret:
-        name: ""
-        key: ""
+      name: ""
+      key: ""
 
   env:
     dataFolder: "/data"
@@ -193,6 +190,7 @@ server:
     sso:
       enabled: false
       disablePasswordLogin: false
+      frontend: ""
       clientId: ""
       clientSecret: ""
       authority: ""
