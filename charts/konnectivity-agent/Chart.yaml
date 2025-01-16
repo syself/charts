@@ -2,7 +2,7 @@ apiVersion: v2
 name: konnectivity
 description: Helm Chart for deploying the konnectivity agent, plus server RBAC.
 type: application
-home: https://github.com/syself/charts/tree/main/charts/konnectivity
+home: https://github.com/syself/charts/tree/main/charts/konnectivity-agent
 maintainers:
   - name: Syself
     email: info@syself.com
