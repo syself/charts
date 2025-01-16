@@ -8,7 +8,7 @@ image:
   repository: registry.k8s.io/kas-network-proxy/proxy-agent
   pullPolicy: Always
 
-nameOverride: ""
+nameOverride: ''
 
 cluster:
   host:
@@ -26,14 +26,16 @@ pdb:
 serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "konnectivity-agent"
+  name: 'konnectivity-agent'
 
 podAnnotations: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -41,7 +43,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -58,8 +61,8 @@ nodeSelector: {}
 affinity: {}
 
 tolerations:
-- key: "CriticalAddonsOnly"
-  operator: "Exists"
+  - key: 'CriticalAddonsOnly'
+    operator: 'Exists'
 
 topologySpreadConstraints: {}
 
@@ -69,11 +72,11 @@ serviceMonitor:
   extraLabels: {}
   ## Scrape interval. If not set, the Prometheus default scrape interval is used.
   ##
-  interval: ""
+  interval: ''
 
   ## proxyUrl: URL of a proxy that should be used for scraping.
   ##
-  proxyUrl: ""
+  proxyUrl: ''
 
   ## MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
   ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
@@ -100,17 +103,19 @@ serviceMonitor:
   #  foo: bar
 
 server:
+  serviceAccount:
+    name: 'konnectivity-server'
   serviceMonitor:
     enabled: false
     ## Set extraLabels for the serviceMonitor object.
     extraLabels: {}
     ## Scrape interval. If not set, the Prometheus default scrape interval is used.
     ##
-    interval: ""
+    interval: ''
 
     ## proxyUrl: URL of a proxy that should be used for scraping.
     ##
-    proxyUrl: ""
+    proxyUrl: ''
 
     ## MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
@@ -139,18 +144,16 @@ server:
 proportional-autoscaler:
   enabled: false
   image:
-    tag: v1.8.9
+    tag: v1.9.0
   fullnameOverride: konnectivity-agent-proportional-autoscaler
   options:
     target: deployment/konnectivity-agent
-
   replicaCount: 2
-
-  # config:
-  #   linear:
-  #     coresPerReplica: 32
-  #     nodesPerReplica: 4
-  #     min: 2
-  #     max: 50
-  #     preventSinglePointFailure: true
-  #     includeUnschedulableNodes: true
+  config:
+    linear:
+      coresPerReplica: 32
+      nodesPerReplica: 4
+      min: 2
+      max: 50
+      preventSinglePointFailure: true
+      includeUnschedulableNodes: true
