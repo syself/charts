@@ -83,14 +83,13 @@ server:
   ## @param server.databaseURL.existingSecret.key Specifies the key of an existing Secret for the database URL
   ##
   databaseURL:
-    # value: ""
-    # existingSecret:
-    #   {}
-    # name: postgres-cluster-app
-    # key: uri
+    value: ""
+    existingSecret:
+      name: ""
+      key: ""
 
   ## @param server.appURL URL where the app will be accessible. Used a needed env var for vaultwarden and for the ingress, if enabled.
-  appURL: ""
+  appURL: "https://vault.example.com"
 
   ## Vaultwarden Persistent Volume Claim parameters
   pvc:
@@ -101,7 +100,7 @@ server:
     size: 8Gi
 
     ## @param server.pvc.storageClass Name of the storage class to be used by the PVC
-    storageClass: standard
+    storageClass: default
 
   ## @param server.containerPorts.frontend vaultwarden server frontend container port
   ##
