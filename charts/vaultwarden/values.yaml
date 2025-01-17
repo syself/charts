@@ -1,0 +1,465 @@
+## @section Global parameters
+## Global Docker image parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
+##
+
+## @param global.imageRegistry Global Docker image registry
+## @param global.imagePullSecrets Global Docker registry secret names as an array
+## @param global.storageClass Global StorageClass for Persistent Volume(s)
+##
+global:
+  imageRegistry: ""
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  storageClass: ""
+
+## @section Common parameters
+##
+
+## @param nameOverride String to partially override common.names.name
+##
+nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname
+##
+fullnameOverride: ""
+## @param namespaceOverride String to fully override common.names.namespace
+##
+namespaceOverride: ""
+## @param commonLabels Labels to add to all deployed objects
+##
+commonLabels: {}
+## @param commonAnnotations Annotations to add to all deployed objects
+##
+commonAnnotations: {}
+
+## @param extraDeploy Array of extra objects to deploy with the release
+##
+extraDeploy: []
+
+## @section Vaultwarden Server Parameters
+##
+
+## Server
+##
+server:
+  ## @param server.image.registry vaultwarden server image registry
+  ## @param server.image.repository vaultwarden server image repository
+  ## @param server.image.tag vaultwarden server image tag (immutable tags are recommended)
+  ## @param server.image.digest vaultwarden server image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag image tag (immutable tags are recommended)
+  ## @param server.image.pullPolicy vaultwarden server image pull policy
+  ## @param server.image.pullSecrets vaultwarden server image pull secrets
+  ##
+  image:
+    registry: docker.io
+    repository: vaultwarden/server
+    tag: ""
+    digest: ""
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: []
+
+  ## @param server.replicaCount Number of vaultwarden server replicas to deploy
+  ##
+  ## Currently, raising this number will result in issues due to the only
+  ## volume claim mode available being ReadWriteOnce in our Hetzner VMs
+  replicaCount: 1
+
+  ## @param server.databaseURL.value  Specifies the value for the DATABASE_URL environmt variable. Creates a secret from that value. If you have already a secret containing the db connection leave this empty.
+  ## @param server.databaseURL.existingSecret.name Specifies the name of an existing Secret for the database URL
+  ## @param server.databaseURL.existingSecret.key Specifies the key of an existing Secret for the database URL
+  ##
+  databaseURL:
+    value: ""
+    existingSecret:
+      name: ""
+      key: ""
+
+  ## @param server.appURL URL where the app will be accessible. Used a needed env var for vaultwarden and for the ingress, if enabled.
+  appURL: "https://vault.example.com"
+
+  ## Vaultwarden Persistent Volume Claim parameters
+  pvc:
+    ## @param server.pvc.accessMode Name of the access mode to be set in the PVC
+    accessMode: ReadWriteOnce
+
+    ## @param server.pvc.size Size to be requested for the PVC
+    size: 8Gi
+
+    ## @param server.pvc.storageClass Name of the storage class to be used by the PVC
+    storageClass: default
+
+  ## @param server.containerPorts.frontend vaultwarden server frontend container port
+  ##
+  containerPorts:
+    frontend: 80
+
+  ## Vaultwarden environment variables
+  ## ref: https://github.com/dani-garcia/vaultwarden/blob/main/.env.template
+  ## @param server.env.dataFolder Main data folder
+  ## @param server.env.attachmentsFolder Attachments folder, override main data folder
+  ## @param server.env.showPasswordHint Controls whether a password hint should be shown directly in the web page if SMTP service is not configured. Not recommended for publicly-accessible instances as this provides unauthenticated access to potentially sensitive data.
+  ## @param server.env.signupsAllowed Controls if new users can register
+  ## @param server.env.invitationsAllowed Invitations allow org admins to invite users, even when signups are disabled
+  ## @param server.env.invitationOrgName Name shown in the invitation emails that don't come from a specific organization
+  ## @param server.env.signupDomainsWhitelist Controls if new users from a list of comma-separated domains can register even if SIGNUPS_ALLOWED is set to false
+  ## @param server.env.signupsVerify Controls if new users need to verify their email address upon registration
+  ## @param server.env.logFile Logging to file
+  ## @param server.env.logLevel Change the verbosity of the log output. Valid values are "trace", "debug", "info", "warn", "error" and "off".
+  ## @param server.env.iconBlacklistNonGlobalIps Any IP which is not defined as a global IP will be blacklisted. Useful to secure your internal environment.
+  ## @param server.env.ipHeader Client IP Header, used to identify the IP of the client, defaults to "X-Real-IP". Set to the string "none" (without quotes), to disable any headers and just use the remote IP.
+  ## @param server.env.dbConnectionRetries Number of times to retry the database connection during startup, with 1 second delay between each retry, set to 0 to retry indefinitely
+  ## @param server.env.databaseMaxConnections Define the size of the connection pool used for connecting to the database.
+  ## @param server.env.enableDbWAL Set to false to avoid enabling WAL during startup. Note that if the DB already has WAL enabled, you will also need to disable WAL in the DB, this setting only prevents Vaultwarden from automatically enabling it on start.
+  ## @param server.env.webVaultEnabled Wheter to enable web vault
+  ## @param server.env.sso.enabled
+  ## @param server.env.sso.disablePasswordLogin
+  ## @param server.env.sso.clientId
+  ## @param server.env.sso.clientSecret
+  ## @param server.env.sso.authority
+  ## @param server.env.websocket.enabled
+  ## @param server.env.websocket.address
+  ## @param server.env.websocket.port
+  ## @param server.env.rocket.address
+  ## @param server.env.rocket.workers
+  ## @param server.env.rocket.port
+  ## @param server.env.rocket.workers
+  ## @param server.env.yubico.clientId
+  ## @param server.env.yubico.secretKey
+  ## @param server.env.yubico.server
+  ## @param server.env.smtp.existingSecret
+  ## @param server.env.smtp.host
+  ## @param server.env.smtp.security
+  ## @param server.env.smtp.port
+  ## @param server.env.smtp.from
+  ## @param server.env.smtp.fromName
+  ## @param server.env.smtp.username.value
+  ## @param server.env.smtp.username.existingSecretKey
+  ## @param server.env.smtp.password.value
+  ## @param server.env.smtp.password.existingSecretKey
+  ## @param server.env.smtp.authMechanism
+  ## @param server.env.smtp.acceptInvalidHostnames
+  ## @param server.env.smtp.acceptInvalidCerts
+  ## @param server.env.smtp.debug
+  ## @param server.env.pushNotifications
+
+  sso:
+    existingSecretEnabled: true
+    clientIdFromSecret:
+      name: ""
+      key: ""
+    clientSecretFromSecret:
+      name: ""
+      key: ""
+    authorityFromSecret:
+      name: ""
+      key: ""
+
+  env:
+    dataFolder: "/data"
+    attachmentsFolder: "/data/attachments"
+    showPasswordHint: false
+    signupsAllowed: true
+    invitationsAllowed: true
+    invitationOrgName: "Vaultwarden"
+    signupDomainsWhitelist: ""
+    signupsVerify: false
+    logFile: ""
+    logLevel: ""
+    iconBlacklistNonGlobalIps: false
+    ipHeader: "X-Real-IP"
+    dbConnectionRetries: 15
+    databaseMaxConnections: 10
+    enableDbWAL: true
+    webVaultEnabled: true
+
+    sso:
+      enabled: false
+      disablePasswordLogin: false
+      frontend: ""
+      clientId: ""
+      clientSecret: ""
+      authority: ""
+      scopes: ""
+
+    websocket:
+      enabled: true
+      address: "0.0.0.0"
+      port: 3012
+
+    rocket:
+      address: ""
+      port: ""
+      workers: "10"
+
+    yubico:
+      clientId: ""
+      secretKey: ""
+      server: ""
+
+    smtp:
+      existingSecret: ""
+      host: ""
+      security: "starttls"
+      port: 25
+      from: ""
+      fromName: ""
+      username:
+        value: ""
+        existingSecretKey: ""
+      password:
+        value: ""
+        existingSecretKey: ""
+      authMechanism: "Plain"
+      acceptInvalidHostnames: "false"
+      acceptInvalidCerts: "false"
+      debug: false
+
+    pushNotifications:
+      {}
+      # installationId: ""
+      # installationKey: ""
+
+  ## Vaultwarden server service parameters
+  ##
+  service:
+    ## @param server.service.ports.frontend vaultwarden server service frontend port
+    ports:
+      frontend: 80
+
+    ## @param server.service.annotations Additional custom annotations for vaultwarden server service
+    annotations: {}
+
+  ## Vaultwarden ingress parameters
+  ingress:
+    ## @param server.ingress.enable Boolean to enable or disable creation of an ingress
+    enable: false
+
+    ## @param server.ingress.ingressClassName Name of the class to be used by the ingress
+    ingressClassName: nginx
+
+    ## @param server.ingress.enableTLS Wheter to enable TLS encryption for the ingress
+    enableTLS: true
+
+    ## @param server.ingress.annotations Additional custom annotations for vaultwarden ingress
+    annotations:
+      {}
+      ##
+      # cert-manager.io/cluster-issuer: letsencrypt-staging
+      # external-dns.alpha.kubernetes.io/ttl: "1m"
+
+  ## RBAC configuration
+  ##
+  rbac:
+    ## @param server.rbac.create Specifies whether RBAC resources should be created
+    ##
+    create: true
+    ## @param server.rbac.rules Custom RBAC rules to set
+    ## e.g:
+    ## rules:
+    ##   - apiGroups:
+    ##       - ""
+    ##     resources:
+    ##       - pods
+    ##     verbs:
+    ##       - get
+    ##       - list
+    ##
+    rules: []
+
+  ## Configure extra options for vaultwarden server containers' liveness and readiness probes
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param server.livenessProbe.enabled Enable livenessProbe on vaultwarden server containers
+  ## @param server.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param server.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param server.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param server.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param server.livenessProbe.successThreshold Success threshold for livenessProbe
+  ##
+  livenessProbe:
+    enabled: false
+    initialDelaySeconds: 10
+    periodSeconds: 2
+    timeoutSeconds: 3
+    failureThreshold: 5
+    successThreshold: 1
+
+  ## @param server.customLivenessProbe Custom livenessProbe that overrides the default one
+  ##
+  customLivenessProbe: {}
+  ## @param server.customReadinessProbe Custom readinessProbe that overrides the default one
+  ##
+  customReadinessProbe: {}
+  ## @param server.customStartupProbe Custom startupProbe that overrides the default one
+  ##
+  customStartupProbe: {}
+  ## Vaultwarden server resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ## @param server.resources.vaultwardenServer.limits The resources limits for the vaultwarden server containers
+  ## @param server.resources.vaultwardenServer.requests The requested resources for the vaultwarden server containers
+  ##
+  resources:
+    vaultwardenServer:
+      limits: {}
+      requests: {}
+
+  ## Configure Pods Security Context
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  ## @param server.podSecurityContext.enabled Enabled vaultwarden server pods' Security Context
+  ## @param server.podSecurityContext.fsGroup Set vaultwarden server pod's Security Context fsGroup
+  ##
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param server.podLabels Extra labels for vaultwarden server pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+
+  ## @param server.podAnnotations Annotations for vaultwarden server pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+
+  ## @param server.pdb.create Enable PodDisruptionBudged for vaultwarden server pods
+  ## @param server.pdb.minAvailable Set minAvailable for vaultwarden server pods
+  ## @param server.pdb.maxUnavailable Set maxUnavailable for vaultwarden server pods
+  ##
+  pdb:
+    create: false
+    minAvailable: 1
+    maxUnavailable: ""
+
+  ## Autoscaling configuration
+  ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+  ## @param server.autoscaling.enabled Enable autoscaling for server
+  ## @param server.autoscaling.minReplicas Minimum number of vaultwarden server replicas
+  ## @param server.autoscaling.maxReplicas Maximum number of vaultwarden server replicas
+  ## @param server.autoscaling.targetCPU Target CPU utilization percentage
+  ## @param server.autoscaling.targetMemory Target Memory utilization percentage
+  ##
+  autoscaling:
+    enabled: false
+    minReplicas: ""
+    maxReplicas: ""
+    targetCPU: ""
+    targetMemory: ""
+
+  ## @param server.affinity Affinity for vaultwarden server pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
+
+  ## @param server.nodeSelector Node labels for vaultwarden server pods assignment
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## @param server.tolerations Tolerations for vaultwarden server pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+
+  ## @param server.updateStrategy.type vaultwarden server statefulset strategy type
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
+  ##
+  updateStrategy:
+    ## StrategyType
+    ## Can be set to RollingUpdate or OnDelete
+    ##
+    type: RollingUpdate
+
+  ## @param server.priorityClassName vaultwarden server pods' priorityClassName
+  ##
+  priorityClassName: ""
+
+  ## @param server.topologySpreadConstraints Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods
+  ##
+  topologySpreadConstraints: []
+
+  ## @param server.schedulerName Name of the k8s scheduler (other than default) for vaultwarden server pods
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  schedulerName: ""
+
+  ## @param server.terminationGracePeriodSeconds Seconds Redmine pod needs to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  ##
+  terminationGracePeriodSeconds: ""
+
+  ## @param server.lifecycleHooks for the vaultwarden server container(s) to automate configuration before or after startup
+  ##
+  lifecycleHooks: {}
+
+  ## @param server.extraEnvVars Array with extra environment variables to add to vaultwarden server nodes
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  ##
+  extraEnvVars: []
+
+  ## @param server.extraVolumes Extra Volumes for vaultwarden server pods
+  extraVolumes: []
+
+  ## @param server.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the vaultwarden server container(s)
+  ##
+  extraVolumeMounts: []
+
+  ## @param server.sidecars Add additional sidecar containers to the vaultwarden server pod(s)
+  ## e.g:
+  ## sidecars:
+  ##   - name: your-image-name
+  ##     image: your-image
+  ##     imagePullPolicy: Always
+  ##     ports:
+  ##       - name: portname
+  ##         containerPort: 1234
+  ##
+  sidecars: []
+
+  ## @param server.initContainers Add additional init containers to the vaultwarden server pod(s)
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  ##
+  initContainers: []
+
+## @section Other Parameters
+##
+
+## ServiceAccount configuration
+##
+serviceAccount:
+  ## @param serviceAccount.create Specifies whether a ServiceAccount should be created
+  ##
+  create: true
+  ## @param serviceAccount.name The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the common.names.fullname template
+  ##
+  name: ""
+  ## @param serviceAccount.annotations Additional Service Account annotations (evaluated as a template)
+  ##
+  annotations: {}
+  ## @param serviceAccount.automountServiceAccountToken Automount service account token for the vaultwarden server service account
+  ##
+  automountServiceAccountToken: true

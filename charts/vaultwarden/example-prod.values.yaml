@@ -1,0 +1,83 @@
+fullnameOverride: ""
+namespaceOverride: "vaultwarden"
+server:
+  image:
+    registry: docker.io
+    repository: vaultwarden/server
+    tag: "1.30.1"
+    pullPolicy: IfNotPresent
+
+  databaseURL:
+    existingSecret:
+      name: postgres-cluster-app
+      key: uri
+
+  appURL: "https://vault.example.domain.com"
+
+  pvc:
+    accessMode: ReadWriteMany
+    size: 8Gi
+    storageClass: standard
+
+  containerPorts:
+    frontend: 80
+
+  env:
+    dataFolder: "/data"
+    attachmentsFolder: "/data/attachments"
+    showPasswordHint: false
+    signupsAllowed: false
+    invitationsAllowed: true
+    invitationOrgName: "Vaultwarden"
+    signupDomainsWhitelist: "yourcompany.tld,yourcompany.example.com"
+    signupsVerify: true
+    ipHeader: "X-Real-IP"
+    websocket:
+      enabled: true
+      address: "0.0.0.0"
+      port: 3012
+
+    sso:
+      enabled: false
+      disablePasswordLogin: false
+
+  service:
+    ports:
+      frontend: 80
+
+  ingress:
+    enable: true
+    ingressClassName: nginx
+    enableTLS: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-staging
+      external-dns.alpha.kubernetes.io/ttl: "1m"
+
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 2
+    timeoutSeconds: 3
+    failureThreshold: 5
+    successThreshold: 1
+
+  resources:
+    vaultwardenServer:
+      limits:
+        memory: 2Gi
+        cpu: 2Gi
+      requests:
+        memory: 500Mi
+        cpu: 500Mi
+
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1001
+
+  pdb:
+    create: true
+    minAvailable: 1
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2

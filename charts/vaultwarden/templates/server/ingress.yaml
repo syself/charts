@@ -1,0 +1,38 @@
+{{- if eq .Values.server.ingress.enable true }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "common.names.fullname" . }}-server
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: server
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.server.ingress.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.server.ingress.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.server.ingress.annotations "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.server.ingress.ingressClassName }}
+  tls:
+  - hosts:
+      - {{ .Values.server.appURL | trimPrefix "http" | trimPrefix "s" | trimPrefix "://" }}
+    secretName: vaultwarden-tls
+  rules:
+  - host: {{ .Values.server.appURL | trimPrefix "http" | trimPrefix "s" | trimPrefix "://" }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "common.names.fullname" . }}-server
+            port:
+              number: {{ .Values.server.containerPorts.frontend }}
+{{- end }}

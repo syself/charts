@@ -1,0 +1,9 @@
+apiVersion: "v2"
+name: "vaultwarden"
+version: "1.0.0"
+appVersion: ""
+description: |
+  This chart installs and configures Vaultwarden.
+
+  Vaultwarden is an alternative implementation of the
+  Bitwarden server API, compatible with  Bitwarden clients.
