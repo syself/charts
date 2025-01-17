@@ -1075,4 +1075,15 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/topolvm-1.1.0/topolvm-1.1.0.tgz
     version: 1.1.0
-generated: "2025-01-16T18:10:54.14091548Z"
+  vaultwarden:
+  - apiVersion: v2
+    created: "2025-01-17T13:03:48.678240095Z"
+    description: 'This chart installs and configures Vaultwarden.  Vaultwarden is
+      an alternative implementation of the Bitwarden server API, compatible with  Bitwarden
+      clients. '
+    digest: f3ee96a7bf78ae01d1f9315a74d0e8e10e25bd8e26dfa5b27a22578e1d457cf3
+    name: vaultwarden
+    urls:
+    - https://github.com/syself/charts/releases/download/vaultwarden-1.0.0/vaultwarden-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-01-17T13:03:48.678447803Z"
