@@ -1,5 +1,5 @@
-fullnameOverride: "vaultwarden"
-
+fullnameOverride: ""
+namespaceOverride: "vaultwarden"
 server:
   image:
     registry: docker.io
@@ -11,7 +11,7 @@ server:
     existingSecret:
       name: postgres-cluster-app
       key: uri
-  
+
   appURL: "https://vault.example.domain.com"
 
   pvc:
@@ -36,6 +36,10 @@ server:
       enabled: true
       address: "0.0.0.0"
       port: 3012
+
+    sso:
+      enabled: false
+      disablePasswordLogin: false
 
   service:
     ports:
