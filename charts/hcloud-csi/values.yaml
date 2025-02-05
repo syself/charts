@@ -81,7 +81,7 @@ controller:
     csiAttacher:
       registry: registry.k8s.io
       repository: sig-storage/csi-attacher
-      tag: v4.7.0
+      tag: v4.8.0
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -100,7 +100,7 @@ controller:
     csiResizer:
       registry: registry.k8s.io
       repository: sig-storage/csi-resizer
-      tag: v1.12.0
+      tag: v1.13.1
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -119,7 +119,7 @@ controller:
     csiProvisioner:
       registry: registry.k8s.io
       repository: sig-storage/csi-provisioner
-      tag: v5.1.0
+      tag: v5.2.0
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -138,7 +138,7 @@ controller:
     livenessProbe:
       registry: registry.k8s.io
       repository: sig-storage/livenessprobe
-      tag: v2.14.0
+      tag: v2.15.0
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -157,7 +157,7 @@ controller:
     hcloudCSIDriver:
       registry: docker.io
       repository: hetznercloud/hcloud-csi-driver
-      tag: v2.11.0
+      tag: v2.12.0
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -444,7 +444,7 @@ node:
     CSINodeDriverRegistrar:
       registry: registry.k8s.io
       repository: sig-storage/csi-node-driver-registrar
-      tag: v2.12.0
+      tag: v2.13.0
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -463,7 +463,7 @@ node:
     livenessProbe:
       registry: registry.k8s.io
       repository: sig-storage/livenessprobe
-      tag: v2.14.0
+      tag: v2.15.0
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -482,7 +482,7 @@ node:
     hcloudCSIDriver:
       registry: docker.io
       repository: hetznercloud/hcloud-csi-driver
-      tag: v2.11.0
+      tag: v2.12.0
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
