@@ -741,6 +741,26 @@ entries:
     version: 0.1.0
   konnectivity-agent:
   - apiVersion: v2
+    created: "2025-02-07T11:38:17.434336445Z"
+    dependencies:
+    - alias: proportional-autoscaler
+      condition: proportional-autoscaler.enabled
+      name: cluster-proportional-autoscaler
+      repository: https://kubernetes-sigs.github.io/cluster-proportional-autoscaler
+      version: 1.1.0
+    description: Helm Chart for deploying the konnectivity agent, plus server RBAC.
+    digest: 369962a6f4bf9511333a1d05786518c1ab103debdc6ce2529fe92cda1cb5ae5c
+    home: https://github.com/syself/charts/tree/main/charts/konnectivity-agent
+    maintainers:
+    - email: info@syself.com
+      name: Syself
+      url: https://github.com/syself
+    name: konnectivity-agent
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/konnectivity-agent-2.0.1/konnectivity-agent-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v2
     created: "2025-01-16T18:10:54.14072439Z"
     dependencies:
     - alias: proportional-autoscaler
@@ -1101,4 +1121,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/vaultwarden-1.0.0/vaultwarden-1.0.0.tgz
     version: 1.0.0
-generated: "2025-02-05T13:23:57.61587949Z"
+generated: "2025-02-07T11:38:17.434643458Z"
