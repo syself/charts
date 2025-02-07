@@ -150,10 +150,24 @@ proportional-autoscaler:
     target: deployment/konnectivity-agent
   replicaCount: 2
   config:
-    linear:
-      coresPerReplica: 32
-      nodesPerReplica: 4
-      min: 2
-      max: 50
-      preventSinglePointFailure: true
-      includeUnschedulableNodes: true
+    # linear:
+    #   coresPerReplica: 32
+    #   nodesPerReplica: 4
+    #   min: 2
+    #   max: 50
+    #   preventSinglePointFailure: true
+    #   includeUnschedulableNodes: true
+    ladder:
+      nodesToReplicas:
+        - [1, 1]
+        - [2, 2]
+        - [3, 3]
+        - [4, 4]
+        - [5, 5]
+        - [6, 6]
+        - [10, 8]
+        - [100, 12]
+        - [250, 18]
+        - [500, 25]
+        - [2000, 50]
+        - [5000, 100]
