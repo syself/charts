@@ -111,7 +111,7 @@ spec:
           image: {{ include "common.images.image" (dict "imageRoot" .Values.controller.image.hcloudCSIDriver "global" .Values.global) }}
           imagePullPolicy: {{ .Values.controller.image.hcloudCSIDriver.pullPolicy }}
           args:
-            - -controller
+          - -controller
           volumeMounts:
             - name: socket-dir
               mountPath: /run/csi
