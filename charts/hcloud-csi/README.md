@@ -1,5 +1,18 @@
+# Hcloud CSI by Syself
 
-# Hcloud CSI
+## How to Sync with Upstream
+
+checkout upstream, then:
+
+```console
+meld ../csi-driver/chart/values.yaml charts/hcloud-csi/values.yaml
+```
+
+Then sync the lines containing `tag:`
+
+---
+
+---
 
 This deploys a production-ready helm chart for the Hcloud CSI.
 
@@ -11,7 +24,6 @@ helm install csi syself/hcloud-csi
 ```
 
 ## Introduction
-
 
 ## Prerequisites
 
@@ -233,8 +245,6 @@ The command removes all the Kubernetes components associated with the chart and 
 | `metrics.serviceMonitor.selector`             | Prometheus instance selector labels                                                                    | `{}`    |
 | `storageClasses`                              | Creates one or more storageClasses                                                                     | `{}`    |
 
-
-
 ## Additional environment variables
 
 In case you want to add extra environment variables (useful for advanced operations like custom init scripts), you can use the `extraEnvVars` property.
@@ -249,5 +259,3 @@ controller:
 ## Pod affinity
 
 This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about Pod affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
-
-
