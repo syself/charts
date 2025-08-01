@@ -92,7 +92,8 @@ spec:
         - name: hcloud-csi-driver
           image: {{ include "common.images.image" (dict "imageRoot" .Values.node.image.hcloudCSIDriver "global" .Values.global) }}
           imagePullPolicy: {{ .Values.node.image.pullPolicy }}
-          command: [/bin/hcloud-csi-driver-node]
+          args:
+          - -node
           volumeMounts:
             - name: kubelet-dir
               mountPath: {{ .Values.node.kubeletDir }}
