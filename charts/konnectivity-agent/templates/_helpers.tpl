@@ -63,7 +63,7 @@ Selector labels for server
 {{- define "konnectivity-server.selectorLabels" -}}
 app.kubernetes.io/name: konnectivity-server
 app.kubernetes.io/instance: konnectivity-server
-k8s-app: konnectivity-agent
+k8s-app: konnectivity-server
 {{- end }}
 
 {{/*
