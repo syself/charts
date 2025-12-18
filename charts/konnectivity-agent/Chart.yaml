@@ -8,10 +8,12 @@ maintainers:
     email: info@syself.com
     url: https://github.com/syself
 dependencies:
+  # See latest version at:
+  # https://kubernetes-sigs.github.io/cluster-proportional-autoscaler/index.yaml
   - name: cluster-proportional-autoscaler
     repository: https://kubernetes-sigs.github.io/cluster-proportional-autoscaler
     version: 1.1.0
     appVersion: 1.8.6
     alias: proportional-autoscaler
     condition: proportional-autoscaler.enabled
-version: 2.0.1
+version: 2.0.2
