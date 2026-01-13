@@ -256,6 +256,21 @@ entries:
     version: 0.0.1
   ccm-hetzner:
   - apiVersion: v2
+    appVersion: v2.0.2
+    created: "2026-01-13T13:07:51.522204791Z"
+    description: Helm Chart for Hcloud Cloud Controller Manager
+    digest: b04eb010c49c5fd551a1718bbd7dc38563d0893bad6e802ad6af55d1507df2ff
+    home: https://github.com/syself/charts/tree/main/charts/ccm-hetzner
+    maintainers:
+    - email: info@syself.com
+      name: Syself
+      url: https://github.com/syself
+    name: ccm-hetzner
+    type: application
+    urls:
+    - https://github.com/syself/charts/releases/download/ccm-hetzner-2.0.2/ccm-hetzner-2.0.2.tgz
+    version: 2.0.2
+  - apiVersion: v2
     appVersion: v2.0.1
     created: "2024-12-19T09:29:54.230153482Z"
     description: Helm Chart for Hcloud Cloud Controller Manager
@@ -1156,4 +1171,4 @@ entries:
     urls:
     - https://github.com/syself/charts/releases/download/vaultwarden-1.0.0/vaultwarden-1.0.0.tgz
     version: 1.0.0
-generated: "2025-12-18T06:55:53.797796654Z"
+generated: "2026-01-13T13:07:51.52248448Z"
