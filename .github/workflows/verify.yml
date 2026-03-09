@@ -7,8 +7,28 @@ jobs:
     runs-on: ubuntu-latest
     name: verify PR contents
     steps:
-    - name: Verifier action
-      id: verifier
-      uses: kubernetes-sigs/kubebuilder-release-tools@v0.1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Verify PR Title
+      env:
+        TITLE: ${{ github.event.pull_request.title }}
+      run: |
+        if [[ -z "$TITLE" ]]; then
+          echo "::error::PR title cannot be empty."
+          exit 1
+        fi
+
+        # Match both actual emoji and GitHub shortcodes, since GitHub may convert
+        # emoji to shortcodes (e.g. 🌱 → :seedling:) when passing the title to actions.
+        if ! [[ "$TITLE" =~ ^(⚠|:warning:|✨|:sparkles:|🐛|:bug:|📖|:book:|🚀|:rocket:|🌱|:seedling:) ]]; then
+          echo "::error::Invalid PR title format. Must start with one of: ⚠ ✨ 🐛 📖 🚀 🌱"
+          echo ""
+          echo "Your PR title must start with one of the following indicators:"
+          echo "  ⚠  (:warning:)   - Breaking change"
+          echo "  ✨ (:sparkles:)  - Non-breaking feature"
+          echo "  🐛 (:bug:)       - Patch fix"
+          echo "  📖 (:book:)      - Docs"
+          echo "  🚀 (:rocket:)    - Release"
+          echo "  🌱 (:seedling:)  - Infra/Tests/Other"
+          exit 1
+        fi
+
+        echo "PR title is valid: '$TITLE'"
