@@ -112,9 +112,6 @@ spec:
           imagePullPolicy: {{ .Values.controller.image.hcloudCSIDriver.pullPolicy }}
           args:
           - -controller
-          volumeMounts:
-            - name: socket-dir
-              mountPath: /run/csi
           env:
             - name: CSI_ENDPOINT
               value: unix:///run/csi/socket
