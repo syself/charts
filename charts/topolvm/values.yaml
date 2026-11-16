@@ -53,8 +53,10 @@ topolvm:
           topolvm.io/device-class: "dc-hdd"
   node:
     lvmdEmbedded: true
+    priorityClassName: system-node-critical
+    nodeSelector:
+      instance.hetzner.cloud/is-root-server: "true"
   controller:
+    priorityClassName: system-cluster-critical
     nodeFinalize:
       skipped: true
-  nodeSelector:
-    instance.hetzner.cloud/is-root-server: "true"
